@@ -1,0 +1,2 @@
+# School_Management_Software_SaaS
+Automated website repository for School_Management_Software_SaaS
