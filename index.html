@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPulse | School Management Software (SaaS) - Attendance, Fees & Parent Portal</title>
+  <meta name="description" content="All-in-one School Management Software (SaaS). Manage student attendance, automated fee collection, timetables, and direct parent communication from one unified cloud dashboard.">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <script>
+    (function() {
+      function safeGet(key, def) {
+        try { return localStorage.getItem(key) || def; } catch(e) { return def; }
+      }
+      function safeSet(key, val) {
+        try { localStorage.setItem(key, val); } catch(e) {}
+      }
+      var SVG_MOON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      var SVG_SUN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+      var SVG_RTL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>';
+      window.applyTheme = function(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        safeSet('edupulse_theme', theme);
+        var btns = document.querySelectorAll('.js-theme-toggle');
+        for(var i=0; i<btns.length; i++) {
+          btns[i].innerHTML = theme === 'dark' ? SVG_SUN : SVG_MOON;
+        }
+      };
+      window.toggleTheme = function() {
+        var curr = document.documentElement.getAttribute('data-theme') || 'light';
+        window.applyTheme(curr === 'dark' ? 'light' : 'dark');
+      };
+      window.applyRTL = function(dir) {
+        document.documentElement.setAttribute('dir', dir);
+        safeSet('edupulse_rtl', dir);
+        var btns = document.querySelectorAll('.js-rtl-toggle');
+        for(var i=0; i<btns.length; i++) {
+          btns[i].innerHTML = SVG_RTL;
+        }
+      };
+      window.toggleRTL = function() {
+        var curr = document.documentElement.getAttribute('dir') || 'ltr';
+        window.applyRTL(curr === 'rtl' ? 'ltr' : 'rtl');
+      };
+      window.openMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          mobileMenu.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+      window.closeMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
+      window.toggleMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          if (mobileMenu.classList.contains('active')) {
+            window.closeMobileMenu();
+          } else {
+            window.openMobileMenu();
+          }
+        }
+      };
+      var initTheme = safeGet('edupulse_theme', 'light');
+      var initRTL = safeGet('edupulse_rtl', 'ltr');
+      document.documentElement.setAttribute('data-theme', initTheme);
+      document.documentElement.setAttribute('dir', initRTL);
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVBAR
+       ========================================================================== -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" id="navLogo">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">EDUPULSE</span>
+          <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link active">Home</a></li>
+          <li><a href="home-2.html" class="nav-link">Home 2</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="features.html" class="nav-link">Features</a></li>
+          <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+          <li><a href="integrations.html" class="nav-link">Integrations</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Desktop Controls & CTA -->
+      <div class="nav-actions">
+        <button class="control-btn js-theme-toggle" id="desktopThemeBtn" title="Toggle Theme" onclick="toggleTheme()" aria-label="Toggle Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+        <button class="control-btn js-rtl-toggle" id="desktopRTLBtn" title="Toggle RTL" onclick="toggleRTL()" aria-label="Toggle RTL Direction"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg></button>
+        <a href="dashboard.html" class="control-btn" title="School Admin Dashboard" aria-label="Open School Admin Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg></a>
+        <a href="login.html" class="btn btn-primary">Login →</a>
+      </div>
+
+      <!-- Hamburger for Mobile -->
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation Menu" onclick="openMobileMenu()">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-drawer">
+      <div>
+        <div class="mobile-drawer-header">
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">EDUPULSE</span>
+              <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+            </div>
+          </div>
+          <button type="button" class="mobile-close-btn" id="closeMenuBtn" onclick="closeMobileMenu()">&times;</button>
+        </div>
+
+        <ul class="mobile-nav-links">
+          <li><a href="index.html" class="mobile-nav-link active">Home</a></li>
+          <li><a href="home-2.html" class="mobile-nav-link">Home 2</a></li>
+          <li><a href="about.html" class="mobile-nav-link">About</a></li>
+          <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+          <li><a href="pricing.html" class="mobile-nav-link">Pricing</a></li>
+          <li><a href="integrations.html" class="mobile-nav-link">Integrations</a></li>
+          <li><a href="contact.html" class="mobile-nav-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="mobile-controls">
+          <div class="mobile-controls-row">
+            <button class="control-btn js-theme-toggle" style="flex:1;" title="Toggle Theme" onclick="toggleTheme()" aria-label="Toggle Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+            <button class="control-btn js-rtl-toggle" style="flex:1;" title="Toggle RTL" onclick="toggleRTL()" aria-label="Toggle RTL Direction"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg></button>
+            <a href="dashboard.html" class="control-btn" style="flex:1; text-align:center;" title="School Admin Dashboard" aria-label="Open School Admin Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg></a>
+          </div>
+          <a href="login.html" class="btn btn-primary" style="width: 100%;">Login →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SECTION 01 — HERO (ULTRA-PREMIUM LIGHT MESH)
+       ========================================================================== -->
+  <section class="section hero-section home-hero-h1">
+    <!-- Overlay for crystal clear typography while preserving student & campus vibrancy -->
+    <div class="home-hero-h1-overlay"></div>
+
+    <div class="container hero-split" style="position: relative; z-index: 1;">
+      
+      <!-- LEFT COLUMN: Content, Action CTAs & Quick Feature Pillars -->
+      <div class="home-hero-content reveal reveal-left">
+        <!-- Modern SaaS Announcement Pill -->
+        <a href="features.html#simulator" class="home-announcement-pill">
+          <span class="home-pill-badge">✦ NEW</span>
+          <span>EduPulse 3.0 Live • AI Timetables & Biometric Gate Sync →</span>
+        </a>
+
+        <h1 class="home-hero-title">
+          Simplify Attendance.<br>
+          Automate Fees.<br>
+          <span class="home-title-brand">Empower Every School Campus.</span>
+        </h1>
+
+        <p class="home-hero-desc">
+          The modern school management OS engineered for K-12 schools, multi-branch academies, and higher-ed colleges. Unify daily attendance, fee collection, dynamic AI timetables, and real-time parent notifications in one intelligent portal.
+        </p>
+
+        <div class="home-cta-buttons">
+          <a href="pricing.html" class="home-btn-primary">Get Started Free →</a>
+          <a href="features.html" class="home-btn-demo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <span>Watch Demo</span>
+          </a>
+        </div>
+
+        <!-- 4 Quick Feature Pills (Row Below Buttons) -->
+        <div class="home-feature-row">
+          <div class="home-feature-col">
+            <div class="home-feature-icon icon-attendance">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="home-feature-name">Attendance</div>
+            <div class="home-feature-sub">Real-time tracking</div>
+          </div>
+
+          <div class="home-feature-col">
+            <div class="home-feature-icon icon-fees">
+              <span style="font-size: 1.1rem; line-height: 1;">₹</span>
+            </div>
+            <div class="home-feature-name">Fee Management</div>
+            <div class="home-feature-sub">Automated & secure</div>
+          </div>
+
+          <div class="home-feature-col">
+            <div class="home-feature-icon icon-timetable">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="home-feature-name">AI Timetable</div>
+            <div class="home-feature-sub">Smart scheduling</div>
+          </div>
+
+          <div class="home-feature-col">
+            <div class="home-feature-icon icon-parent">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="home-feature-name">Parent Portal</div>
+            <div class="home-feature-sub">Instant updates</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Floating Attendance Overview Card & Mobile/Tablet Visual -->
+      <div class="home-dashboard-wrapper reveal reveal-scale">
+        
+        <!-- Mobile & Tablet Only: Visual Campus Showcase Banner (Hidden on Desktop) -->
+        <div class="home-mobile-visual-card">
+          <img src="assets/images/h1.png" alt="EduPulse Student & Campus" class="home-mobile-photo" loading="eager">
+          <div class="home-mobile-note">
+            <span>Better Learning Together</span>
+          </div>
+        </div>
+
+        <div class="home-dashboard-card">
+          
+          <!-- Card Header -->
+          <div class="home-card-header">
+            <div class="home-card-title-wrap">
+              <div class="home-card-icon-pill">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <span class="home-card-title">Attendance Overview</span>
+            </div>
+            <div class="home-card-dropdown">
+              <span>Today</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+
+          <!-- 3 Quick KPI Stat Micro-Cards -->
+          <div class="home-kpi-row">
+            <div class="home-kpi-chip">
+              <div class="home-kpi-icon-row">
+                <div class="home-kpi-icon icon-enrolled">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                </div>
+                <span class="home-kpi-badge">+2.5%</span>
+              </div>
+              <div class="home-kpi-label">Enrolled Students</div>
+              <div class="home-kpi-number" data-counter="1450">1,450</div>
+            </div>
+
+            <div class="home-kpi-chip">
+              <div class="home-kpi-icon-row">
+                <div class="home-kpi-icon icon-attendance-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <span class="home-kpi-badge">+1.2%</span>
+              </div>
+              <div class="home-kpi-label">Today's Attendance</div>
+              <div class="home-kpi-number" data-counter="98" data-suffix="%">98%</div>
+            </div>
+
+            <div class="home-kpi-chip">
+              <div class="home-kpi-icon-row">
+                <div class="home-kpi-icon icon-fees-chip">
+                  <span style="font-size: 0.875rem; font-weight: 800;">₹</span>
+                </div>
+                <span class="home-kpi-badge">+8.4%</span>
+              </div>
+              <div class="home-kpi-label">Term Fees Collected</div>
+              <div class="home-kpi-number" data-counter="184199" data-prefix="₹">₹184,199</div>
+            </div>
+          </div>
+
+          <!-- Recent Activity Feed -->
+          <div class="home-activity-section">
+            <div class="home-activity-header">
+              <div class="home-activity-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Recent Activity</span>
+              </div>
+              <a href="dashboard.html" class="home-activity-link">View All →</a>
+            </div>
+
+            <div class="home-activity-list">
+              <div class="home-activity-item">
+                <div class="home-activity-left">
+                  <div class="home-act-icon act-attendance">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  </div>
+                  <div>
+                    <span class="home-act-name">Grade 10-A Morning Attendance</span>
+                    <span class="home-act-time">08:40 AM</span>
+                  </div>
+                </div>
+                <span class="home-act-pill pill-green">Present (2 Absent)</span>
+              </div>
+
+              <div class="home-activity-item">
+                <div class="home-activity-left">
+                  <div class="home-act-icon act-fees">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                  </div>
+                  <div>
+                    <span class="home-act-name">Term 2 Tuition Invoicing</span>
+                    <span class="home-act-time">11:15 AM</span>
+                  </div>
+                </div>
+                <span class="home-act-pill pill-blue">84% Paid Online</span>
+              </div>
+
+              <div class="home-activity-item">
+                <div class="home-activity-left">
+                  <div class="home-act-icon act-timetable">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                  </div>
+                  <div>
+                    <span class="home-act-name">Period 3 Timetable Substitution</span>
+                    <span class="home-act-time">01:20 PM</span>
+                  </div>
+                </div>
+                <span class="home-act-pill pill-purple">Covered by Dr. Vance</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Handwritten sticker badge -->
+        <div class="home-handwritten-note">
+          Better<br>Learning<br>Together
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       INSTITUTIONAL TRUST LOGO BAR
+       ========================================================================== -->
+  <div class="campus-trust-bar">
+    <div class="container text-center">
+      <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 18px;">
+        Trusted by 1,450+ K-12 Academies, Day Schools & Regional Districts
+      </div>
+      <div class="trust-logo-grid">
+        <div class="trust-logo-item">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>Oakridge Academy</span>
+        </div>
+        <div class="trust-logo-item">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>St. Jude Prep</span>
+        </div>
+        <div class="trust-logo-item">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>Horizon International</span>
+        </div>
+        <div class="trust-logo-item">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>STEM District 12</span>
+        </div>
+        <div class="trust-logo-item">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          <span>Westwood Collegiate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SECTION 02 — INVENTORY PROBLEM -> SCHOOL ADMINISTRATIVE PROBLEM
+       ========================================================================== -->
+  <section class="section" id="section-problem" style="background: var(--bg-surface-elevated); border-block: 1px solid var(--border-color);">
+    <div class="container split-grid">
+      <div class="problem-visual reveal reveal-left">
+        <div class="eyebrow">THE OLD WAY VS EDUPULSE</div>
+        <h3 style="font-size: 1.5rem; margin-bottom: 20px;">School Administrative Friction Points</h3>
+        <ul class="problem-list">
+          <li class="problem-item">
+            <div class="problem-icon">✕</div>
+            <div>
+              <strong style="display: block;">Manual Paper Registers & Spreadsheets</strong>
+              <span style="font-size: 0.875rem; color: var(--text-secondary);">Teachers wasting 15+ minutes every morning marking roll calls on fragile paper sheets.</span>
+            </div>
+          </li>
+          <li class="problem-item">
+            <div class="problem-icon">✕</div>
+            <div>
+              <strong style="display: block;">Delayed Fee Collection & Lost Checks</strong>
+              <span style="font-size: 0.875rem; color: var(--text-secondary);">Manual paper receipts, long bank queues, and awkward reminder phone calls to parents.</span>
+            </div>
+          </li>
+          <li class="problem-item">
+            <div class="problem-icon">✕</div>
+            <div>
+              <strong style="display: block;">Conflicting Timetables & Uninformed Parents</strong>
+              <span style="font-size: 0.875rem; color: var(--text-secondary);">Double-booked teachers, room scheduling clashes, and parents left in the dark on attendance.</span>
+            </div>
+          </li>
+          <li class="problem-item">
+            <div class="problem-icon solution">✓</div>
+            <div>
+              <strong style="display: block; color: var(--brand-teal);">The EduPulse Cloud Solution</strong>
+              <span style="font-size: 0.875rem; color: var(--text-secondary);">1-click biometric attendance, automated fee reminders, dynamic AI timetables, and direct parent messaging.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="reveal reveal-right">
+        <span class="eyebrow">ACADEMIC OPERATIONAL EXCELLENCE</span>
+        <h2 class="section-title">Eliminate Administrative Overhead from Every Classroom.</h2>
+        <p class="section-desc" style="margin-bottom: 24px;">
+          Schools lose hundreds of valuable teaching hours each year to manual paper filing, fragmented attendance sheets, and delayed fee receipts. EduPulse gives school administrators, teachers, and parents instant visibility into student attendance, institutional fee collections, and dynamic academic timetables.
+        </p>
+        <a href="features.html" class="btn btn-secondary">Discover All Features →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 03 — AUTOMATION WORKFLOW
+       ========================================================================== -->
+  <section class="section">
+    <div class="container workflow-container reveal reveal-scale">
+      <div class="section-header text-center">
+        <span class="eyebrow">AUTOMATED SCHOOL WORKFLOW</span>
+        <h2 class="section-title">From Morning Roll Call to Parent Notification — Automatically.</h2>
+        <p class="section-desc">Click any stage below to inspect how EduPulse synchronizes daily attendance, fees, and timetables in real time.</p>
+      </div>
+
+      <div class="workflow-steps">
+        <button class="workflow-step-btn active" data-step="0" onclick="switchWorkflowStep(0)">
+          <div class="workflow-step-num">1</div>
+          <div class="workflow-step-title">Roll Call</div>
+        </button>
+        <button class="workflow-step-btn" data-step="1" onclick="switchWorkflowStep(1)">
+          <div class="workflow-step-num">2</div>
+          <div class="workflow-step-title">Cloud Synced</div>
+        </button>
+        <button class="workflow-step-btn" data-step="2" onclick="switchWorkflowStep(2)">
+          <div class="workflow-step-num">3</div>
+          <div class="workflow-step-title">Parent SMS</div>
+        </button>
+        <button class="workflow-step-btn" data-step="3" onclick="switchWorkflowStep(3)">
+          <div class="workflow-step-num">4</div>
+          <div class="workflow-step-title">Timetable Shift</div>
+        </button>
+        <button class="workflow-step-btn" data-step="4" onclick="switchWorkflowStep(4)">
+          <div class="workflow-step-num">5</div>
+          <div class="workflow-step-title">Fees & Report</div>
+        </button>
+      </div>
+
+      <div class="workflow-detail-box" style="transition: opacity 0.2s ease, transform 0.2s ease;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+            <span class="eyebrow" id="workflowBadge" style="margin-bottom: 0;">Real-time Roll Call</span>
+            <span class="workflow-step-pill" id="workflowBadgePill">Step 1 of 5</span>
+          </div>
+          <h3 id="workflowTitle" style="font-size: 1.75rem; margin-block: 8px 14px; letter-spacing: -0.02em;">1. Morning Roll Call Recorded</h3>
+          <p id="workflowDesc" style="font-size: 1.0625rem; line-height: 1.6; color: var(--text-secondary);">
+            Teachers mark daily attendance on classroom tablets, web portals, or via biometric student RFID check-in gates in under 30 seconds.
+          </p>
+
+          <!-- Dynamic 3-Feature Checklist -->
+          <div class="workflow-feature-list" id="workflowFeatures">
+            <div class="workflow-feature-item">
+              <span class="workflow-feature-icon">✓</span>
+              <span>1-Tap Biometric RFID Gate & Tablet check-in in under 30s</span>
+            </div>
+            <div class="workflow-feature-item">
+              <span class="workflow-feature-icon">✓</span>
+              <span>Instant morning roll-call with automated absent student flags</span>
+            </div>
+            <div class="workflow-feature-item">
+              <span class="workflow-feature-icon">✓</span>
+              <span>Eliminates paper registers & morning classroom disruption</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="workflowVisualCardContainer">
+          <img id="workflowImg" src="assets/images/a1.png" onerror="this.onerror=null; this.src='assets/images/a1.png';" alt="Morning Roll Call Recorded">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 04 — MULTI-CAMPUS NETWORK
+       ========================================================================== -->
+  <section class="section" style="background: var(--bg-surface-elevated); border-block: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="section-header text-center reveal">
+        <span class="eyebrow">MULTI-CAMPUS NETWORK</span>
+        <h2 class="section-title">Real-Time Attendance & Academic Control Across Every Campus.</h2>
+        <p class="section-desc">Manage student records, faculty allocation, and institutional fee balances across primary branches, middle school blocks, and senior academies.</p>
+      </div>
+
+      <div class="network-grid">
+        <div class="location-card reveal delay-1">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-muted);">CAMPUS A</div>
+          <h4 style="font-size: 1.125rem; margin-top: 4px;">North Elementary Branch</h4>
+          <div class="location-count" data-counter="420">420</div>
+          <span style="font-size: 0.8125rem; color: var(--text-secondary);">Enrolled Students</span>
+        </div>
+
+        <div class="location-card reveal delay-2">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-muted);">CAMPUS B</div>
+          <h4 style="font-size: 1.125rem; margin-top: 4px;">Central High School</h4>
+          <div class="location-count" data-counter="860">860</div>
+          <span style="font-size: 0.8125rem; color: var(--text-secondary);">Enrolled Students</span>
+        </div>
+
+        <div class="location-card reveal delay-3">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-muted);">CAMPUS C</div>
+          <h4 style="font-size: 1.125rem; margin-top: 4px;">Westside STEM Academy</h4>
+          <div class="location-count" data-counter="340">340</div>
+          <span style="font-size: 0.8125rem; color: var(--text-secondary);">Enrolled Students</span>
+        </div>
+
+        <div class="location-card central reveal delay-4">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--brand-teal);">CENTRAL DISTRICT</div>
+          <h4 style="font-size: 1.125rem; margin-top: 4px;">Main District Administration</h4>
+          <div class="location-count" data-counter="1620">1,620</div>
+          <span style="font-size: 0.8125rem; color: var(--text-secondary);">Total Active Students</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 05 — REPORTING
+       ========================================================================== -->
+  <section class="section">
+    <div class="container reporting-grid">
+      <div class="reveal reveal-left">
+        <span class="eyebrow">INSTITUTIONAL METRICS</span>
+        <h2 class="section-title">Executive Intelligence & Real-Time Numbers Behind Your School.</h2>
+        <p class="section-desc" style="margin-bottom: 24px;">
+          Make confident academic, staffing, and financial decisions. EduPulse aggregates student attendance trends, term tuition fee recovery, teacher workload balances, and grade averages into crystal-clear executive reports.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
+          <div style="background: var(--bg-surface); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">AVERAGE ATTENDANCE</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--brand-teal);" data-counter="96.8" data-suffix="%" data-decimals="1">96.8%</div>
+          </div>
+          <div style="background: var(--bg-surface); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">ON-TIME FEE RECOVERY</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--brand-teal);" data-counter="94.2" data-suffix="%" data-decimals="1">94.2%</div>
+          </div>
+        </div>
+        <a href="pricing.html" class="btn btn-primary">Explore School Analytics →</a>
+      </div>
+
+      <!-- Pure CSS Bar Chart Visualization -->
+      <div class="reveal reveal-right" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-md);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h4 style="font-size: 1rem;">Weekly Student Attendance & Class Engagement</h4>
+          <span style="font-size: 0.75rem; color: var(--brand-teal); font-weight: 700; background: var(--teal-light); padding: 4px 10px; border-radius: 20px;">Live Campus Feed</span>
+        </div>
+
+        <div class="css-bar-chart active">
+          <div class="chart-bar-group" title="Mon: 96% attendance">
+            <div class="chart-bar-container">
+              <div class="chart-bar" style="height: 96%;"></div>
+            </div>
+            <span class="chart-bar-label">Mon</span>
+          </div>
+          <div class="chart-bar-group" title="Tue: 98% attendance">
+            <div class="chart-bar-container">
+              <div class="chart-bar" style="height: 98%;"></div>
+            </div>
+            <span class="chart-bar-label">Tue</span>
+          </div>
+          <div class="chart-bar-group" title="Wed: 95% attendance">
+            <div class="chart-bar-container">
+              <div class="chart-bar" style="height: 95%;"></div>
+            </div>
+            <span class="chart-bar-label">Wed</span>
+          </div>
+          <div class="chart-bar-group" title="Thu: 97% attendance">
+            <div class="chart-bar-container">
+              <div class="chart-bar" style="height: 97%;"></div>
+            </div>
+            <span class="chart-bar-label">Thu</span>
+          </div>
+          <div class="chart-bar-group" title="Fri: 94% attendance">
+            <div class="chart-bar-container">
+              <div class="chart-bar" style="height: 94%;"></div>
+            </div>
+            <span class="chart-bar-label">Fri</span>
+          </div>
+          <div class="chart-bar-group" title="Sat: 88% attendance (Labs & Clubs)">
+            <div class="chart-bar-container">
+              <div class="chart-bar" style="height: 88%;"></div>
+            </div>
+            <span class="chart-bar-label">Sat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 05b — SCHOOL OPERATIONAL SHOWCASE & CAMPUS INTELLIGENCE
+       ========================================================================== -->
+  <section class="section img-showcase-section" style="padding-top: var(--space-xl); padding-bottom: var(--space-2xl);">
+    <div class="container">
+      <!-- Section Header -->
+      <div class="section-header text-center reveal" style="margin-bottom: var(--space-xl);">
+        <span class="eyebrow" style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.25); color: var(--brand-blue);">ACADEMIC OPERATIONAL SCALE</span>
+        <h2 class="section-title">Every Student. Every Period.<br><span class="gradient-text">Every Campus Connected.</span></h2>
+        <p class="section-desc">EduPulse gives independent academies and multi-branch school districts the operational clarity of modern cloud software — with zero friction and guaranteed reliability.</p>
+      </div>
+
+      <!-- Main Showcase Split Bento Container -->
+      <div class="showcase-bento-card reveal reveal-scale">
+        <div class="showcase-bento-grid">
+          
+          <!-- Left Column: Editorial Highlights & Capability List -->
+          <div class="showcase-editorial-col">
+            <div class="showcase-live-pill">
+              <span class="pulse-beacon"></span>
+              <span>Central Cloud Engine</span>
+            </div>
+
+            <h3 class="showcase-editorial-title">
+              Built for the Highs and Rhythms of Real School Life.
+            </h3>
+
+            <p class="showcase-editorial-desc">
+              From the morning turnstile rush to period-by-period class rotations and instant parent notifications, EduPulse handles millions of student touchpoints every school day with sub-second responsiveness.
+            </p>
+
+            <!-- Feature Value Pillars -->
+            <div class="showcase-feature-list">
+              <div class="showcase-feature-item">
+                <div class="showcase-feature-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="showcase-feature-heading">Biometric & RFID Gate Synchronization</div>
+                  <div class="showcase-feature-sub">Instantly sync turnstiles, bus scanners, and classroom tablets in under 30 seconds.</div>
+                </div>
+              </div>
+
+              <div class="showcase-feature-item">
+                <div class="showcase-feature-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="showcase-feature-heading">Multi-Campus District Control</div>
+                  <div class="showcase-feature-sub">Unify academic calendars, grade scales, and faculty substitution pools across all branches.</div>
+                </div>
+              </div>
+
+              <div class="showcase-feature-item">
+                <div class="showcase-feature-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="showcase-feature-heading">Automated Absence & Fee Broadcasts</div>
+                  <div class="showcase-feature-sub">Keep parents connected with zero-lag WhatsApp, SMS, and native mobile notifications.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA Row -->
+            <div class="showcase-cta-row">
+              <a href="features.html" class="btn btn-primary" style="padding: 13px 26px;">Explore School Workflow →</a>
+              <span class="showcase-cta-note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Free 14-day campus pilot • No credit card required
+              </span>
+            </div>
+          </div>
+
+          <!-- Right Column: Framed Device / Interactive Campus Visual -->
+          <div class="showcase-visual-col">
+            <div class="showcase-device-frame">
+              <!-- Window Chrome Header -->
+              <div class="showcase-device-header">
+                <div class="showcase-device-dots">
+                  <span class="device-dot dot-red"></span>
+                  <span class="device-dot dot-yellow"></span>
+                  <span class="device-dot dot-green"></span>
+                </div>
+                <div class="showcase-device-address">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span>edupulse.app/campus-live-sync</span>
+                </div>
+                <div class="showcase-device-tag">LIVE FEED</div>
+              </div>
+
+              <!-- Framed Campus Image Container -->
+              <div class="showcase-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80"
+                  alt="Modern connected classroom with engaged students and interactive digital display"
+                  class="showcase-visual-img"
+                  onerror="this.onerror=null; this.src='assets/images/a1.png';"
+                >
+                <div class="showcase-img-gradient-overlay"></div>
+
+                <!-- Floating Interactive Hotspots inside device frame -->
+                <div class="showcase-floating-chip chip-top">
+                  <span class="pulse-beacon beacon-sky"></span>
+                  <span class="chip-text">Smart Classroom: 32 Student Tablets Active</span>
+                </div>
+
+                <div class="showcase-floating-chip chip-bottom">
+                  <span class="pulse-beacon beacon-emerald"></span>
+                  <span class="chip-text">Attendance Biometric Hub Online • 98.4% Present</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Dedicated KPI Stat Cards Grid (Bottom) -->
+      <div class="showcase-kpi-grid reveal">
+        <div class="showcase-kpi-card">
+          <div class="kpi-icon-bubble">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18"/>
+              <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/>
+              <path d="M9 9h1"/>
+              <path d="M9 13h1"/>
+              <path d="M9 17h1"/>
+              <path d="M14 9h1"/>
+              <path d="M14 13h1"/>
+              <path d="M14 17h1"/>
+            </svg>
+          </div>
+          <div class="kpi-metric-number" data-counter="1450" data-suffix="+">1,450+</div>
+          <div class="kpi-metric-label">Active Schools</div>
+          <p class="kpi-metric-desc">K-12 schools, private academies, and vocational institutes trust EduPulse daily.</p>
+        </div>
+
+        <div class="showcase-kpi-card">
+          <div class="kpi-icon-bubble">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="kpi-metric-number" data-counter="680" data-suffix="K+">680K+</div>
+          <div class="kpi-metric-label">Students Tracked</div>
+          <p class="kpi-metric-desc">Over 4.5 million roll calls, grades, and parent SMS broadcasts processed monthly.</p>
+        </div>
+
+        <div class="showcase-kpi-card">
+          <div class="kpi-icon-bubble">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+          <div class="kpi-metric-number" data-counter="99.9" data-suffix="%" data-decimals="1">99.9%</div>
+          <div class="kpi-metric-label">Uptime SLA</div>
+          <p class="kpi-metric-desc">Enterprise-grade multi-region cloud infrastructure ensures 24/7 reliability.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 06 — CAMPUS LIVE SYNC SIMULATOR
+       ========================================================================== -->
+  <section class="section sim-section" id="simulator">
+    <div class="container">
+      <div class="section-header text-center reveal">
+        <span class="eyebrow" style="background: rgba(56, 189, 248,0.15); border: 1px solid rgba(56, 189, 248,0.3); color: #38BDF8;">CAMPUS SYNC ENGINE</span>
+        <h2 class="section-title">Interactive Simulator: Live Attendance & Parent Notification.</h2>
+        <p class="section-desc">Click the simulation actions below to test how real-time attendance roll-calls trigger automated parent SMS alerts and fee reconciliation instantly.</p>
+      </div>
+
+      <div class="sim-wrapper reveal reveal-scale">
+        <!-- Interactive Action Bar -->
+        <div class="sim-action-btn-group">
+          <button id="simPosBtn" class="btn btn-primary sim-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="18" y1="8" x2="23" y2="13"></line><line x1="23" y1="8" x2="18" y2="13"></line></svg>
+            <span>Mark Student Absent <span class="sim-btn-badge">(-1)</span></span>
+          </button>
+          <button id="simWebBtn" class="btn btn-navy-secondary sim-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            <span>Online Fee Paid <span class="sim-btn-badge">(+$450)</span></span>
+          </button>
+          <button id="simResetBtn" class="btn btn-navy-secondary sim-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            <span>Reset Register</span>
+          </button>
+        </div>
+
+        <!-- Product & Live Status Card -->
+        <div class="sim-status-card">
+          <div class="sim-card-header">
+            <div class="sim-card-meta">
+              <span class="sim-card-eyebrow">TEST CLASSROOM REGISTER</span>
+              <h3 class="sim-card-title">Grade 10-A • Homeroom 302 <span class="sim-card-enrolled">(35 Enrolled)</span></h3>
+            </div>
+            <div class="sim-badge-wrap">
+              <span id="simStatusBadge" class="sim-status-badge">
+                <span class="status-dot status-optimal"></span>
+                <span>Class Attendance: 97.1% (Optimal)</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Progress Bar & Count -->
+          <div class="sim-progress-wrap">
+            <div class="sim-progress-labels">
+              <span>Students Present Today: <strong id="simQtyText">34 Students</strong></span>
+              <span class="sim-quorum-text">Mandatory Quorum: 28</span>
+            </div>
+            <div class="sim-progress-track">
+              <div id="simProgressBar" class="sim-progress-fill" style="width: 97%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Activity Terminal Log -->
+        <div class="sim-terminal-log" id="simTerminalLog">
+          <div style="color: #38BDF8;">[SYS] EduPulse school engine active. Listening for RFID / biometric check-ins...</div>
+        </div>
+
+        <div class="sim-footer-cta">
+          <a href="login.html" class="btn btn-primary">Access School Portal Now →</a>
+          <a href="features.html" class="btn btn-navy-secondary">Explore All Features →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 07 — CAMPUS LIFE & DIGITAL LEARNING IMAGE GALLERY
+       ========================================================================== -->
+  <section class="section campus-gallery-section" id="gallery">
+    <div class="container">
+      <div class="section-header text-center reveal">
+        <span class="eyebrow" style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.25); color: #2563EB;">CAMPUS SHOWCASE</span>
+        <h2 class="section-title">See EduPulse in Action Across Modern School Campuses.</h2>
+        <p class="section-desc">
+          Explore how modern K-12 schools, academies, and collegiate institutes thrive with integrated attendance, automated billing, high-tech STEM labs, and interactive classrooms.
+        </p>
+
+        <!-- Category Filter Tabs -->
+        <div class="gallery-filter-bar">
+          <button type="button" class="gallery-filter-btn active" data-filter="all">All Campus Spaces</button>
+          <button type="button" class="gallery-filter-btn" data-filter="classrooms">Classrooms</button>
+          <button type="button" class="gallery-filter-btn" data-filter="stem">STEM & Labs</button>
+          <button type="button" class="gallery-filter-btn" data-filter="libraries">Libraries</button>
+          <button type="button" class="gallery-filter-btn" data-filter="sports">Sports & Campus</button>
+          <button type="button" class="gallery-filter-btn" data-filter="admin">Administration</button>
+        </div>
+      </div>
+
+      <!-- 8-Card Responsive Gallery Grid -->
+      <div class="gallery-grid">
+        
+        <!-- Card 1: Smart Classroom -->
+        <div class="gallery-card reveal delay-1" data-category="classrooms">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">Smart Classroom</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80"
+              alt="Interactive smart classroom with student tablets and touchscreen board"
+              class="gallery-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">Interactive Digital Classrooms</h4>
+            <p class="gallery-card-desc">Touchscreen displays and student tablets connected directly to EduPulse live lesson schedules and real-time attendance roll call.</p>
+            <div class="gallery-card-meta">
+              <span>Homeroom 302 • North Branch</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: STEM Lab -->
+        <div class="gallery-card reveal delay-2" data-category="stem">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">STEM & Robotics</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80"
+              alt="High-tech science laboratory with chemistry equipment and safe student workstations"
+              class="gallery-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">Advanced Science & Physics Labs</h4>
+            <p class="gallery-card-desc">Equipped with automated lab inventory registers, apparatus checkout logs, and recurring experiment schedule trackers.</p>
+            <div class="gallery-card-meta">
+              <span>Discovery Wing • Westside STEM</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Library -->
+        <div class="gallery-card reveal delay-3" data-category="libraries">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">Digital Library</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80"
+              alt="Modern university and school library with quiet study desks and book archives"
+              class="gallery-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">Modern Campus Research Commons</h4>
+            <p class="gallery-card-desc">Integrated barcode book loans, online research repository access, and quiet study pod reservations managed seamlessly.</p>
+            <div class="gallery-card-meta">
+              <span>Central District Academy</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Collaborative Lecture -->
+        <div class="gallery-card reveal delay-4" data-category="classrooms">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">Seminar Hall</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80"
+              alt="Diverse students participating actively in high school and college classroom discussions"
+              class="gallery-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">Collaborative Lecture Halls</h4>
+            <p class="gallery-card-desc">Tiered seminar seating with automated student quorum verification and multimedia interactive lecture synchronization.</p>
+            <div class="gallery-card-meta">
+              <span>Auditorium Block B</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Sports & Athletics -->
+        <div class="gallery-card reveal delay-1" data-category="sports">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">Athletics</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="assets/images/sports_complex.jpg"
+              alt="High school sports stadium with athletic running track, green field, and campus grandstand"
+              class="gallery-img"
+              loading="lazy"
+              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80';"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">Track, Field & Sports Complex</h4>
+            <p class="gallery-card-desc">Student athletic eligibility, coach schedules, inter-school tournament logistics, and medical clearance registers.</p>
+            <div class="gallery-card-meta">
+              <span>Varsity Athletic Center</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Parent Advisory -->
+        <div class="gallery-card reveal delay-2" data-category="admin">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">Parent Advisory</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80"
+              alt="Teacher meeting with parents to discuss student academic report cards and attendance"
+              class="gallery-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">Parent-Teacher Advisory Suite</h4>
+            <p class="gallery-card-desc">Scheduled conference slots with live academic progress cards, attendance histories, and feedback logs at your fingertips.</p>
+            <div class="gallery-card-meta">
+              <span>Advisory Suite 104</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7: Central Admin -->
+        <div class="gallery-card reveal delay-3" data-category="admin">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">Administration</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=800&q=80"
+              alt="School administrative front office where registrars manage school admissions and billing"
+              class="gallery-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">District Administration Headquarters</h4>
+            <p class="gallery-card-desc">Where superintendents and bursars oversee multi-campus tuition reconciliation, faculty payroll, and government compliance.</p>
+            <div class="gallery-card-meta">
+              <span>District HQ • Executive Wing</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8: Computer Science -->
+        <div class="gallery-card reveal delay-4" data-category="stem">
+          <div class="gallery-img-container">
+            <span class="gallery-card-badge">Coding & IT</span>
+            <div class="gallery-card-zoom-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80"
+              alt="High school students collaborating in modern computer lab with desktop computers"
+              class="gallery-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="gallery-card-body">
+            <h4 class="gallery-card-title">High-Tech Computer Science Lab</h4>
+            <p class="gallery-card-desc">High-speed workstations equipped with curriculum software management, exam firewall modes, and automated student logouts.</p>
+            <div class="gallery-card-meta">
+              <span>Innovation Lab • Tech Center</span>
+              <span>View Space →</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Action Under Gallery -->
+      <div class="reveal" style="text-align: center; margin-top: 48px;">
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+          Empowering over 1,450+ school campuses across North America with modern administrative intelligence.
+        </p>
+        <div class="btn-group" style="justify-content: center;">
+          <a href="pricing.html" class="btn btn-primary">Schedule a Guided Campus Tour →</a>
+          <a href="dashboard.html" class="btn btn-secondary">Preview Live Admin Portal</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Lightbox Modal -->
+  <div class="gallery-modal-backdrop" id="galleryModal">
+    <div class="gallery-modal-dialog">
+      <div class="gallery-modal-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="gallery-card-badge" id="galleryModalBadge" style="position: static;">CAMPUS SPACE</span>
+          <h3 id="galleryModalTitle" style="font-size: 1.15rem; margin: 0; color: var(--text-primary);">Campus Facility</h3>
+        </div>
+        <button type="button" class="gallery-modal-close-btn" id="galleryModalClose" aria-label="Close Preview">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="gallery-modal-img-wrap">
+        <img id="galleryModalImg" src="" alt="Campus Facility Full Preview">
+      </div>
+      <div class="gallery-modal-footer">
+        <p id="galleryModalDesc" style="color: var(--text-secondary); margin: 0 0 16px; font-size: 0.9375rem; line-height: 1.55;"></p>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <span style="font-size: 0.8125rem; color: var(--text-muted);">Powered by EduPulse School Management OS</span>
+          <a href="login.html" class="btn btn-primary" style="padding: 8px 18px; font-size: 0.85rem;">Launch School Portal →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SECTION 08 — TESTIMONIALS & DISTRICT SUCCESS STORIES
+       ========================================================================== -->
+  <section class="section testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="section-header text-center reveal">
+        <span class="eyebrow" style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.25); color: #2563EB;">EDUCATOR PROOF</span>
+        <h2 class="section-title">Trusted by 1,450+ Superintendents, Principals & Academic Deans.</h2>
+        <p class="section-desc">
+          See how school districts, academies, and private institutions eliminated paperwork, expedited tuition collections, and unified multi-campus operations.
+        </p>
+      </div>
+
+      <div class="testimonial-grid">
+        
+        <!-- Review 1: District Superintendent -->
+        <div class="testimonial-card reveal delay-1">
+          <div>
+            <div class="testimonial-impact-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>$142,000 Uncollected Fees Recovered</span>
+            </div>
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-quote">
+              "EduPulse transformed how our 3 campus branches run. In our first academic term alone, automated WhatsApp and SMS reminders recovered over $142,000 in past-due tuition without causing awkward friction between staff and parents."
+            </p>
+          </div>
+          <div class="testimonial-footer">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Dr. Arthur Pendelton" class="testimonial-avatar">
+            <div>
+              <div class="testimonial-name">Dr. Arthur Pendelton</div>
+              <div class="testimonial-role">District Superintendent • West Oak Schools (3,400 Students)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2: Academic Dean -->
+        <div class="testimonial-card reveal delay-2">
+          <div>
+            <div class="testimonial-impact-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Timetable Built in 45 Minutes</span>
+            </div>
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-quote">
+              "Building our master academic timetable used to swallow 3 grueling weeks every August. With EduPulse's conflict-free AI scheduler, we resolved 180 faculty slots, room capacities, and lab rotations in under 45 minutes with zero collisions."
+            </p>
+          </div>
+          <div class="testimonial-footer">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" alt="Elena Rostova" class="testimonial-avatar">
+            <div>
+              <div class="testimonial-name">Elena Rostova</div>
+              <div class="testimonial-role">Academic Dean • Horizon Preparatory Academy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3: Principal -->
+        <div class="testimonial-card reveal delay-3">
+          <div>
+            <div class="testimonial-impact-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>98.4% On-Time Daily Attendance</span>
+            </div>
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-quote">
+              "Parents in our community rave about the mobile portal. Attendance alerts notify them the second their teenager scans their RFID badge at the school gates, and digital report cards are delivered straight to their smartphones."
+            </p>
+          </div>
+          <div class="testimonial-footer">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Marcus Holloway" class="testimonial-avatar">
+            <div>
+              <div class="testimonial-name">Marcus Holloway</div>
+              <div class="testimonial-role">Principal • Lincoln STEM Academy</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+    
+  <section class="section final-cta-section">
+    <div class="container">
+      <div class="final-cta-box reveal reveal-scale">
+        <span class="final-cta-badge">ZERO RISK • 14-DAY FULL DISTRICT PILOT</span>
+        <h2 class="final-cta-title">Ready to Modernize Your School's Administration?</h2>
+        <p class="final-cta-subtitle">
+          Join 1,450+ forward-thinking schools that have streamlined attendance tracking, accelerated tuition collection, and delight parents with EduPulse School Management OS.
+        </p>
+
+        <div class="final-cta-buttons">
+          <a href="pricing.html" class="btn btn-primary">
+            Start 14-Day Free School Pilot →
+          </a>
+          <a href="contact.html" class="btn btn-navy-secondary">
+            Book Live Guided Demo
+          </a>
+        </div>
+
+        <div class="final-cta-trust">
+          <div class="final-cta-trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>No Credit Card Required</span>
+          </div>
+          <div class="final-cta-trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>FERPA & COPPA Certified</span>
+          </div>
+          <div class="final-cta-trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>15-Minute Easy Roster Import</span>
+          </div>
+          <div class="final-cta-trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>24/7 Dedicated Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">EDUPULSE</span>
+              <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+            </div>
+          </div>
+          <p>Practical, modern SaaS school management software designed for K-12 schools, academies, and growing colleges.</p>
+          <div class="footer-social-links">
+            <a href="#" class="footer-social-icon" aria-label="X (formerly Twitter)" title="X (Twitter)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="LinkedIn" title="LinkedIn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.74a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="Facebook" title="Facebook">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.8c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.89h-2.33v6.99C18.34 21.12 22 16.99 22 12z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="Instagram" title="Instagram">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="GitHub" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">PRODUCT</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="home-2.html">Home 2</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="#gallery">Campus Gallery</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#faq">FAQs</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">RESOURCES</h4>
+          <ul class="footer-links">
+            <li><a href="integrations.html">Integrations</a></li>
+            <li><a href="dashboard.html#help">Help & Support</a></li>
+            <li><a href="login.html">School Portal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">ACCOUNT</h4>
+          <ul class="footer-links">
+            <li><a href="login.html">School Login</a></li>
+            <li><a href="pricing.html">Start Free</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">NEWSLETTER</h4>
+          <p style="font-size: 0.875rem; color: #98A2B3; margin-bottom: 12px;">GET EDUCATION TECH INSIGHTS</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your school email" class="newsletter-input" required>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 16px;">SUBSCRIBE →</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 EduPulse. All rights reserved. School Management Software (SaaS).</div>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const posBtn = document.getElementById('simPosBtn');
+      const webBtn = document.getElementById('simWebBtn');
+      const resetBtn = document.getElementById('simResetBtn');
+      const qtyText = document.getElementById('simQtyText');
+      const progressBar = document.getElementById('simProgressBar');
+      const statusBadge = document.getElementById('simStatusBadge');
+      const terminalLog = document.getElementById('simTerminalLog');
+
+      let currentPresent = 34;
+      const totalStudents = 35;
+      const quorumPoint = 28;
+
+      function logMessage(msg, color = '#98A2B3') {
+        if (!terminalLog) return;
+        const time = new Date().toLocaleTimeString();
+        const line = document.createElement('div');
+        line.style.color = color;
+        line.style.marginTop = '4px';
+        line.textContent = `[${time}] ${msg}`;
+        terminalLog.appendChild(line);
+        terminalLog.scrollTop = terminalLog.scrollHeight;
+      }
+
+      function updateSyncUI() {
+        if (!qtyText || !progressBar || !statusBadge) return;
+        qtyText.textContent = `${currentPresent} Students`;
+        const pct = Math.max(0, Math.min(100, (currentPresent / totalStudents) * 100));
+        progressBar.style.width = `${pct}%`;
+
+        if (currentPresent <= 25) {
+          progressBar.style.background = '#FF6B6B';
+          statusBadge.style.background = 'rgba(255,107,107,0.2)';
+          statusBadge.style.borderColor = 'rgba(255,107,107,0.5)';
+          statusBadge.style.color = '#FF6B6B';
+          statusBadge.innerHTML = '<span class="status-dot status-critical"></span> ATTENDANCE CRITICAL: Below Quorum';
+        } else if (currentPresent <= quorumPoint) {
+          progressBar.style.background = '#FFB020';
+          statusBadge.style.background = 'rgba(255,176,32,0.2)';
+          statusBadge.style.borderColor = 'rgba(255,176,32,0.5)';
+          statusBadge.style.color = '#FFB020';
+          statusBadge.innerHTML = '<span class="status-dot status-warning"></span> Low Attendance Warning';
+        } else {
+          progressBar.style.background = 'linear-gradient(90deg, #38BDF8 0%, #25B5A5 100%)';
+          statusBadge.style.background = 'rgba(56, 189, 248,0.15)';
+          statusBadge.style.borderColor = 'rgba(56, 189, 248,0.4)';
+          statusBadge.style.color = '#38BDF8';
+          statusBadge.innerHTML = '<span class="status-dot status-optimal"></span> Class Attendance: ' + Math.round(pct) + '% (Optimal)';
+        }
+      }
+
+      if (posBtn) {
+        posBtn.addEventListener('click', () => {
+          if (currentPresent <= 20) {
+            logMessage('[ALERT] Minimum capacity reached for Grade 10-A.', '#FF6B6B');
+            return;
+          }
+          currentPresent -= 1;
+          const absentRoll = 35 - currentPresent;
+          logMessage(`Student marked Absent (Roll #${absentRoll + 10}). Automated SMS alert dispatched to registered guardian.`, '#38BDF8');
+          if (currentPresent <= quorumPoint) {
+            logMessage(`[NOTICE] Class attendance fell to ${currentPresent}/${totalStudents}. Homeroom teacher notified.`, '#FFB020');
+          }
+          updateSyncUI();
+        });
+      }
+
+      if (webBtn) {
+        webBtn.addEventListener('click', () => {
+          logMessage(`Online Parent Portal payment received: $450.00 (Term 2 Tuition for Student #1042). Digital receipt issued.`, '#60A5FA');
+          logMessage(`[ACCOUNTING] Fee ledger reconciled automatically with Stripe Gateway.`, '#38BDF8');
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          currentPresent = 34;
+          logMessage('[RESET] Daily classroom attendance roster reset to 34/35 Present.', '#38BDF8');
+          updateSyncUI();
+        });
+      }
+    });
+  </script>
+  <!-- BACK TO TOP BUTTON -->
+  <button class="back-to-top" id="backToTopBtn" aria-label="Back to top" title="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Admin Dashboard | EduPulse OS</title>
+  <meta name="description" content="EduPulse School Admin Dashboard — manage student attendance, fee collections, timetables, and direct parent communication from one unified portal.">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard-app">
+
+    <!-- ==========================================================================
+         SIDEBAR NAVIGATION
+         ========================================================================== -->
+    <aside class="sidebar" id="dashSidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;" title="Back to EduPulse Home">
+          <div class="sidebar-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="sidebar-logo-text">EDUPULSE</div>
+            <div class="sidebar-logo-sub">SCHOOL MANAGEMENT OS</div>
+          </div>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-menu-category">Main Operations</div>
+        <button class="nav-item-btn js-dash-nav active" data-target="overview">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg></span> Overview
+        </button>
+        <button class="nav-item-btn js-dash-nav" data-target="inventory">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg></span> Daily Attendance
+        </button>
+        <button class="nav-item-btn js-dash-nav" data-target="purchase-orders">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></span> Fees & Invoicing
+        </button>
+        <button class="nav-item-btn js-dash-nav" data-target="alerts">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Timetables & Classes
+        </button>
+
+        <div class="sidebar-menu-category">Communication & Grades</div>
+        <button class="nav-item-btn js-dash-nav" data-target="sales-reports">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Parent Communication
+        </button>
+        <button class="nav-item-btn js-dash-nav" data-target="inventory-reports">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Academic Report Cards
+        </button>
+
+        <div class="sidebar-menu-category">Campus & Staff</div>
+        <button class="nav-item-btn js-dash-nav" data-target="locations">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Campus Classrooms
+        </button>
+        <button class="nav-item-btn js-dash-nav" data-target="suppliers">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Teachers & Faculty
+        </button>
+        <button class="nav-item-btn js-dash-nav" data-target="billing">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></span> Cloud Subscription
+        </button>
+        <button class="nav-item-btn js-dash-nav" data-target="settings">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span> School Settings
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="nav-item-btn js-dash-nav" data-target="help">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span> Help & Support
+        </button>
+        <a href="login.html" class="nav-item-btn" style="color: #F87171;">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></span> Sign Out
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ==========================================================================
+         MAIN WRAPPER & TOPBAR
+         ========================================================================== -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-icon-btn mobile-hamburger-btn" id="sidebarToggleBtn" aria-label="Toggle Navigation">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <h1 class="topbar-title" id="dashPageTitle">Overview</h1>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Live Search Input -->
+          <div class="topbar-search-wrapper">
+            <span class="topbar-search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            <input type="text" class="topbar-search-input" id="topbarSearchInput" placeholder="Search students, invoices, timetables, teachers...">
+            <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+          </div>
+
+          <!-- Notification Bell -->
+          <button class="topbar-icon-btn" id="notifBtn" aria-label="School Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="notification-badge"></span>
+          </button>
+
+          <!-- Theme & RTL Controls -->
+          <button class="topbar-icon-btn js-theme-toggle" id="dashThemeBtn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+          <button class="topbar-icon-btn js-rtl-toggle" id="dashRTLBtn" title="Toggle LTR/RTL Layout" aria-label="Toggle RTL Direction"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg></button>
+
+          <!-- School Admin User Avatar -->
+          <div class="user-profile-menu">
+            <div class="user-avatar">EV</div>
+            <div class="user-info">
+              <span class="user-name">Dr. Elena Vance</span>
+              <span class="user-store">Oakridge Academy (SCH-2048)</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ==========================================================================
+           DYNAMIC VIEW CONTAINER (SINGLE HTML FILE SPA)
+           ========================================================================== -->
+      <main class="content-viewport">
+
+        <!-- VIEW 01: OVERVIEW -->
+        <section class="view-panel active" id="view-overview">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Good Morning, Principal Vance</h2>
+              <p class="dash-subtitle">Here is what is happening across your school campus today.</p>
+            </div>
+            <span class="badge badge-teal" style="padding: 6px 12px;">Live Campus System</span>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-title">TOTAL STUDENTS</span>
+                <div class="kpi-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+              </div>
+              <div class="kpi-value">1,248</div>
+              <div class="kpi-meta">Across 3 Campus Blocks</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-title">ABSENT TODAY</span>
+                <div class="kpi-icon-box" style="background: rgba(239, 68, 68, 0.12); color: #EF4444;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div>
+              </div>
+              <div class="kpi-value" style="color: #EF4444;">18</div>
+              <div class="kpi-meta" style="color: #EF4444;">Parent SMS Dispatched</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-title">PENDING FEE INVOICES</span>
+                <div class="kpi-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>
+              </div>
+              <div class="kpi-value">7</div>
+              <div class="kpi-meta">Term 2 Due Next Week</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-title">FEES COLLECTED</span>
+                <div class="kpi-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              </div>
+              <div class="kpi-value" style="color: var(--dash-teal);">$142,850</div>
+              <div class="kpi-meta">91.4% Reconciliation Rate</div>
+            </div>
+          </div>
+
+          <div class="dash-two-col">
+            <div class="dash-card">
+              <div class="dash-card-title">
+                <span>Weekly Student Attendance Overview</span>
+                <div style="font-size: 0.8125rem; color: var(--dash-text-muted);">Today: <strong style="color: var(--dash-teal);">96.4% Present</strong> | Week Avg: <strong>96.8%</strong></div>
+              </div>
+              <div class="css-bar-chart">
+                <div class="chart-bar-group" data-val="94%">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 94%;"></div>
+                  </div>
+                  <span class="chart-bar-label">Mon</span>
+                </div>
+                <div class="chart-bar-group" data-val="97%">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 97%;"></div>
+                  </div>
+                  <span class="chart-bar-label">Tue</span>
+                </div>
+                <div class="chart-bar-group" data-val="95%">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 95%;"></div>
+                  </div>
+                  <span class="chart-bar-label">Wed</span>
+                </div>
+                <div class="chart-bar-group" data-val="98%">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 98%;"></div>
+                  </div>
+                  <span class="chart-bar-label">Thu</span>
+                </div>
+                <div class="chart-bar-group active" data-val="96.4%">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 96%;"></div>
+                  </div>
+                  <span class="chart-bar-label">Fri</span>
+                </div>
+                <div class="chart-bar-group" data-val="88%">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 88%;"></div>
+                  </div>
+                  <span class="chart-bar-label">Sat</span>
+                </div>
+                <div class="chart-bar-group" data-val="0%">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 5%;"></div>
+                  </div>
+                  <span class="chart-bar-label">Sun</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dash-card">
+              <div class="dash-card-title">Daily Campus Attendance Breakdown</div>
+              <div style="margin-block: 16px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 6px;">
+                  <span>Present in Class</span><strong>96.4% (1,203 Students)</strong>
+                </div>
+                <div style="height: 10px; background: var(--dash-border); border-radius: 5px; overflow: hidden; margin-bottom: 16px;">
+                  <div style="height: 100%; width: 96.4%; background: var(--dash-teal);"></div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 6px;">
+                  <span>Excused Sick Leaves</span><strong>2.2% (27 Students)</strong>
+                </div>
+                <div style="height: 10px; background: var(--dash-border); border-radius: 5px; overflow: hidden; margin-bottom: 16px;">
+                  <div style="height: 100%; width: 2.2%; background: #F59E0B;"></div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 6px;">
+                  <span>Unexcused Absences</span><strong>1.4% (18 Students)</strong>
+                </div>
+                <div style="height: 10px; background: var(--dash-border); border-radius: 5px; overflow: hidden;">
+                  <div style="height: 100%; width: 1.4%; background: #EF4444;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-card">
+            <div class="dash-card-title">
+              <span>Classroom Morning Roll Call Status</span>
+              <button class="nav-item-btn js-dash-nav" data-target="inventory" style="width: auto; padding: 4px 12px; font-size: 0.8125rem;">View All Class Registers →</button>
+            </div>
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Class / Grade</th>
+                    <th>Room</th>
+                    <th>Attendance Ratio</th>
+                    <th>Homeroom Teacher</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Grade 10-A (Secondary)</strong></td>
+                    <td>Room 302</td>
+                    <td>38 / 40 Present</td>
+                    <td>Dr. Marcus Vance</td>
+                    <td><span class="badge badge-teal">Roll Call Complete</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grade 9-B (Middle School)</strong></td>
+                    <td>Room 204</td>
+                    <td>32 / 35 Present</td>
+                    <td>Ms. Elena Henderson</td>
+                    <td><span class="badge badge-dark">3 Absent (SMS Sent)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grade 8-C (Middle School)</strong></td>
+                    <td>Room 104</td>
+                    <td>28 / 30 Present</td>
+                    <td>Mr. Devon Mills</td>
+                    <td><span class="badge badge-dark">2 Absent (SMS Sent)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grade 11-Science (Senior)</strong></td>
+                    <td>STEM Lab 3</td>
+                    <td>40 / 40 Present</td>
+                    <td>Dr. Sophia Patel</td>
+                    <td><span class="badge badge-teal">100% Present</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 02: INVENTORY -> DAILY ATTENDANCE & ROLL CALL -->
+        <section class="view-panel" id="view-inventory">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Daily Attendance & Roll Call</h2>
+              <p class="dash-subtitle">View class registers, biometric RFID turnstile scans, and update student roll-call records.</p>
+            </div>
+          </div>
+
+          <div class="dash-card">
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Roll / Student ID</th>
+                    <th>Grade / Section</th>
+                    <th>Campus Block</th>
+                    <th>Attendance Record</th>
+                    <th>Term Quorum</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Sophia Zhang</td>
+                    <td>STU-10482</td>
+                    <td>Grade 11-Science</td>
+                    <td>Senior Block</td>
+                    <td><strong>98.4%</strong></td>
+                    <td>85%</td>
+                    <td><span class="badge badge-teal">Present</span></td>
+                    <td><button class="btn btn-secondary js-open-adjust-modal" style="padding: 4px 10px; font-size: 0.75rem;">Edit Roll Call</button></td>
+                  </tr>
+                  <tr>
+                    <td>Ethan Brooks</td>
+                    <td>STU-10483</td>
+                    <td>Grade 10-A</td>
+                    <td>North Wing</td>
+                    <td><strong>91.2%</strong></td>
+                    <td>85%</td>
+                    <td><span class="badge badge-dark" style="color:#EF4444;">Absent (SMS Sent)</span></td>
+                    <td><button class="btn btn-secondary js-open-adjust-modal" style="padding: 4px 10px; font-size: 0.75rem;">Edit Roll Call</button></td>
+                  </tr>
+                  <tr>
+                    <td>Liam Miller</td>
+                    <td>STU-10484</td>
+                    <td>Grade 9-B</td>
+                    <td>West Block</td>
+                    <td><strong>96.0%</strong></td>
+                    <td>85%</td>
+                    <td><span class="badge badge-teal">Present</span></td>
+                    <td><button class="btn btn-secondary js-open-adjust-modal" style="padding: 4px 10px; font-size: 0.75rem;">Edit Roll Call</button></td>
+                  </tr>
+                  <tr>
+                    <td>Maya Patel</td>
+                    <td>STU-10485</td>
+                    <td>Grade 8-C</td>
+                    <td>Central Wing</td>
+                    <td><strong>94.8%</strong></td>
+                    <td>85%</td>
+                    <td><span class="badge badge-teal">Present</span></td>
+                    <td><button class="btn btn-secondary js-open-adjust-modal" style="padding: 4px 10px; font-size: 0.75rem;">Edit Roll Call</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 03: PURCHASE ORDERS -> FEES & TUITION INVOICING -->
+        <section class="view-panel" id="view-purchase-orders">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Fees & Tuition Invoicing</h2>
+              <p class="dash-subtitle">Student term tuition statements, online payments, and automated reminder alerts.</p>
+            </div>
+            <button class="btn btn-primary js-create-po-btn" style="padding: 10px 18px;">+ Generate Fee Invoice</button>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+            <button class="btn btn-secondary js-po-filter active" data-status="all">All Invoices</button>
+            <button class="btn btn-secondary js-po-filter" data-status="pending">Pending</button>
+            <button class="btn btn-secondary js-po-filter" data-status="received">Paid Online</button>
+          </div>
+
+          <div class="dash-card">
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Student Name</th>
+                    <th>Grade / Term</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="js-po-row" data-status="pending">
+                    <td><strong>SCH-2048</strong></td>
+                    <td>Sophia Zhang (Guardian: David Zhang)</td>
+                    <td>Grade 11 • Term 2 Tuition + Lab</td>
+                    <td>$1,470.00</td>
+                    <td>Nov 20, 2026</td>
+                    <td><span class="badge badge-dark">Pending (Reminder Sent)</span></td>
+                  </tr>
+                  <tr class="js-po-row" data-status="received">
+                    <td><strong>SCH-2047</strong></td>
+                    <td>Liam Miller (Guardian: Sarah Miller)</td>
+                    <td>Grade 9 • Term 2 Tuition + Bus</td>
+                    <td>$1,250.00</td>
+                    <td>Nov 15, 2026</td>
+                    <td><span class="badge badge-teal">Paid Online (Stripe)</span></td>
+                  </tr>
+                  <tr class="js-po-row" data-status="pending">
+                    <td><strong>SCH-2046</strong></td>
+                    <td>Ethan Brooks (Guardian: Michael Brooks)</td>
+                    <td>Grade 10 • Term 2 Tuition</td>
+                    <td>$980.00</td>
+                    <td>Nov 22, 2026</td>
+                    <td><span class="badge badge-dark">Pending</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 04: LOW STOCK ALERTS -> TIMETABLES & SUBSTITUTION -->
+        <section class="view-panel" id="view-alerts">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Timetables & Teacher Substitution</h2>
+              <p class="dash-subtitle">Proactive notifications for teacher absences, period substitution, and room schedules.</p>
+            </div>
+          </div>
+
+          <div class="dash-card" style="border-inline-start: 4px solid #EF4444;">
+            <h3 style="font-size: 1.125rem; color: #EF4444; margin-bottom: 12px;">Teacher Leave: Substitution Required (1)</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--dash-bg); border-radius: 8px;">
+              <div>
+                <strong>Grade 9-B • Physics Practical (Period 4 - 11:30 AM)</strong>
+                <span style="font-size: 0.8125rem; color: var(--dash-text-muted); display: block;">Instructor Ms. Henderson on Medical Leave | Suggested Substitute: Mr. Devon Mills</span>
+              </div>
+              <button class="btn btn-primary js-create-po-btn" style="padding: 8px 14px; font-size: 0.8125rem;">Assign Substitute →</button>
+            </div>
+          </div>
+
+          <div class="dash-card" style="border-inline-start: 4px solid #F59E0B;">
+            <h3 style="font-size: 1.125rem; color: #F59E0B; margin-bottom: 12px;">Room Booking Notice (1)</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--dash-bg); border-radius: 8px;">
+              <div>
+                <strong>Central Auditorium • Period 6 Special Event</strong>
+                <span style="font-size: 0.8125rem; color: var(--dash-text-muted); display: block;">Inter-School Debate Championship Assembly (Grade 9 to 12)</span>
+              </div>
+              <button class="btn btn-primary js-create-po-btn" style="padding: 8px 14px; font-size: 0.8125rem;">View Room Timetable →</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 05: SALES REPORTS -> PARENT COMMUNICATION -->
+        <section class="view-panel" id="view-sales-reports">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Parent Communication & Broadcasts</h2>
+              <p class="dash-subtitle">Review parent engagement, SMS/WhatsApp delivery metrics, and direct messaging circulars.</p>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-title">TOTAL SMS / BROADCASTS</span>
+              <div class="kpi-value" style="color: var(--dash-teal);">8,420</div>
+              <div class="kpi-meta">Last 30 Days</div>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-title">DELIVERY SUCCESS RATE</span>
+              <div class="kpi-value">99.4%</div>
+              <div class="kpi-meta">SMS & WhatsApp Gateway</div>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-title">PARENT PORTAL LOGINS</span>
+              <div class="kpi-value">1,180</div>
+              <div class="kpi-meta">94.5% Active Guardians</div>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-title">AVG TEACHER RESPONSE</span>
+              <div class="kpi-value">14 Mins</div>
+              <div class="kpi-meta">During School Hours</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 06: INVENTORY REPORTS -> ACADEMIC GRADEBOOKS -->
+        <section class="view-panel" id="view-inventory-reports">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Academic Gradebooks & Official Report Cards</h2>
+              <p class="dash-subtitle">Curriculum grade distribution, term examination GPA, and official transcript exports.</p>
+            </div>
+          </div>
+
+          <div class="dash-card">
+            <h3 style="font-size: 1.125rem; margin-bottom: 16px;">School-wide Academic Performance</h3>
+            <div style="font-size: 2.25rem; font-weight: 800; color: var(--dash-teal);">3.64 School GPA</div>
+            <p style="font-size: 0.875rem; color: var(--dash-text-muted);">1,248 student report cards verified, digitally signed, and available for download.</p>
+          </div>
+        </section>
+
+        <!-- VIEW 07: LOCATIONS -> CAMPUS CLASSROOMS -->
+        <section class="view-panel" id="view-locations">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Campus Classrooms & Facilities</h2>
+              <p class="dash-subtitle">Manage campus grade blocks, specialized laboratories, auditoriums, and sports fields.</p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Add Facility simulation')" style="padding: 10px 18px;">+ Add New Classroom</button>
+          </div>
+
+          <div class="network-grid">
+            <!-- Location 01 -->
+            <div class="location-card">
+              <div class="location-card-header">
+                <div class="location-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+                <div>
+                  <span class="badge badge-teal" style="font-size: 0.6875rem;">ELEMENTARY BLOCK</span>
+                  <h3 class="location-title">NORTH WING</h3>
+                </div>
+              </div>
+              <p class="location-address" style="display:flex; align-items:center; gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Grades 1-5 • 18 Classrooms • Head: Sarah J.</p>
+              
+              <div class="location-metrics-grid">
+                <div class="location-metric">
+                  <span class="location-metric-label">Students</span>
+                  <span class="location-metric-value">420</span>
+                </div>
+                <div class="location-metric">
+                  <span class="location-metric-label">Attendance</span>
+                  <span class="location-metric-value" style="color: var(--dash-teal);">97.2%</span>
+                </div>
+              </div>
+
+              <div class="location-card-footer">
+                <span class="badge badge-dark" style="color: #38BDF8; background: rgba(56, 189, 248, 0.12);">All Classes Active</span>
+                <button class="nav-item-btn js-dash-nav" data-target="inventory" style="width: auto; padding: 4px 10px; font-size: 0.8125rem;">Roster →</button>
+              </div>
+            </div>
+
+            <!-- Location 02 -->
+            <div class="location-card">
+              <div class="location-card-header">
+                <div class="location-icon-box" style="background: rgba(99, 102, 241, 0.12); color: #6366F1;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+                <div>
+                  <span class="badge badge-dark" style="font-size: 0.6875rem;">HIGH SCHOOL BLOCK</span>
+                  <h3 class="location-title">Senior Academy</h3>
+                </div>
+              </div>
+              <p class="location-address" style="display:flex; align-items:center; gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Grades 9-12 • 24 Classrooms • Dean: Marcus K.</p>
+              
+              <div class="location-metrics-grid">
+                <div class="location-metric">
+                  <span class="location-metric-label">Students</span>
+                  <span class="location-metric-value">526</span>
+                </div>
+                <div class="location-metric">
+                  <span class="location-metric-label">Attendance</span>
+                  <span class="location-metric-value" style="color: var(--dash-teal);">95.8%</span>
+                </div>
+              </div>
+
+              <div class="location-card-footer">
+                <span class="badge badge-dark" style="color: #EF4444; background: rgba(239, 68, 68, 0.12);">1 Substitution Alert</span>
+                <button class="nav-item-btn js-dash-nav" data-target="inventory" style="width: auto; padding: 4px 10px; font-size: 0.8125rem;">Roster →</button>
+              </div>
+            </div>
+
+            <!-- Location 03 -->
+            <div class="location-card central">
+              <div class="location-card-header">
+                <div class="location-icon-box" style="background: rgba(16, 185, 129, 0.12); color: #10B981;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                <div>
+                  <span class="badge badge-teal" style="font-size: 0.6875rem;">CENTRAL CAMPUS</span>
+                  <h3 class="location-title">STEM & Sports Hub</h3>
+                </div>
+              </div>
+              <p class="location-address" style="display:flex; align-items:center; gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> 6 Science Labs • Central Library • Dir: David R.</p>
+              
+              <div class="location-metrics-grid">
+                <div class="location-metric">
+                  <span class="location-metric-label">Capacity</span>
+                  <span class="location-metric-value">1,248</span>
+                </div>
+                <div class="location-metric">
+                  <span class="location-metric-label">Lab Health</span>
+                  <span class="location-metric-value" style="color: var(--dash-teal);">100% Online</span>
+                </div>
+              </div>
+
+              <div class="location-card-footer">
+                <span class="badge badge-teal">All Labs Connected</span>
+                <button class="nav-item-btn js-dash-nav" data-target="inventory" style="width: auto; padding: 4px 10px; font-size: 0.8125rem;">Roster →</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 08: SUPPLIERS -> TEACHERS & FACULTY -->
+        <section class="view-panel" id="view-suppliers">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Teachers & Faculty Directory</h2>
+              <p class="dash-subtitle">Directory of active certified teachers, department workloads, and substitution pools.</p>
+            </div>
+          </div>
+
+          <div class="dash-card">
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Teacher Name</th>
+                    <th>Department</th>
+                    <th>Assigned Periods</th>
+                    <th>Today's Schedule</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Dr. Marcus Vance</strong></td>
+                    <td>Mathematics Dept Head</td>
+                    <td>22 / 24 Periods</td>
+                    <td>Grade 10-A, 11-Science</td>
+                    <td><span class="badge badge-teal">In Class</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ms. Elena Henderson</strong></td>
+                    <td>Physics & Chemistry</td>
+                    <td>20 / 24 Periods</td>
+                    <td>Grade 9-B, 10-A</td>
+                    <td><span class="badge badge-dark" style="color:#EF4444;">On Leave (Substituted)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mr. Devon Mills</strong></td>
+                    <td>English Literature</td>
+                    <td>18 / 24 Periods</td>
+                    <td>Grade 8-C, 9-B (Substitute)</td>
+                    <td><span class="badge badge-teal">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 09: BILLING -->
+        <section class="view-panel" id="view-billing">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">School Cloud Subscription & Billing</h2>
+              <p class="dash-subtitle">Manage your EduPulse school management workspace plan, payment methods, and invoices.</p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Upgrade Plan Modal Simulation')" style="padding: 10px 18px; display: inline-flex; align-items: center; gap: 8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Upgrade to District Tier</span>
+            </button>
+          </div>
+
+          <!-- Billing Top Grid (Plan & Payment Method) -->
+          <div class="billing-grid-top">
+            <!-- Current Plan Card -->
+            <div class="dash-card billing-plan-card">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div>
+                  <span class="badge badge-teal" style="font-size: 0.6875rem;">ACTIVE SCHOOL PLAN</span>
+                  <h3 style="font-size: 1.5rem; margin-top: 8px; font-weight: 800;">Growth Institution Plan</h3>
+                  <p style="font-size: 0.8125rem; color: var(--dash-text-muted);">Billed annually • Next renewal date: <strong>October 01, 2026</strong></p>
+                </div>
+                <div style="text-align: end;">
+                  <span style="font-size: 2rem; font-weight: 800; color: var(--dash-teal); font-family: var(--font-heading);">$49</span>
+                  <span style="font-size: 0.8125rem; color: var(--dash-text-muted);">/ mo</span>
+                </div>
+              </div>
+
+              <!-- Included Features List -->
+              <div class="billing-features-list">
+                <div class="billing-feature-item">✓ <strong>Up to 3</strong> Campus Blocks</div>
+                <div class="billing-feature-item">✓ <strong>Up to 1,500</strong> Enrolled Students</div>
+                <div class="billing-feature-item">✓ <strong>Biometric RFID</strong> & SMS Gateway</div>
+                <div class="billing-feature-item">✓ <strong>24/7 Priority</strong> Academic Support</div>
+              </div>
+
+              <div style="display: flex; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--dash-border);">
+                <button class="btn btn-secondary" onclick="alert('Change Plan Simulation')">Change Plan</button>
+                <button class="btn btn-secondary" onclick="alert('Cancel Subscription Simulation')" style="color: #EF4444; border-color: rgba(239,68,68,0.3);">Cancel Plan</button>
+              </div>
+            </div>
+
+            <!-- Payment Method Card -->
+            <div class="dash-card">
+              <div class="dash-card-title">
+                <span>School Payment Method</span>
+                <button class="nav-item-btn js-dash-nav" style="width: auto; padding: 4px 8px; font-size: 0.75rem;" onclick="alert('Edit Payment Simulation')">Edit</button>
+              </div>
+
+              <div class="payment-card-preview">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                  <span style="font-size: 1.125rem; font-weight: 800; letter-spacing: 0.1em; color: var(--dash-teal);">VISA ACADEMY</span>
+                  <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">DEFAULT</span>
+                </div>
+                <div style="font-size: 1.125rem; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 16px;">•••• •••• •••• 4821</div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255, 255, 255, 0.75);">
+                  <span>EXPIRES: <strong>08/28</strong></span>
+                  <span>OAKRIDGE ACADEMY</span>
+                </div>
+              </div>
+
+              <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 16px; font-size: 0.8125rem;" onclick="alert('Add Payment Method Simulation')">+ Add Backup School Payment</button>
+            </div>
+          </div>
+
+          <!-- Quotas & Plan Usage Card -->
+          <div class="dash-card" style="margin-bottom: 28px;">
+            <div class="dash-card-title">School Resource & Capacity Usage</div>
+            <div class="usage-grid">
+              <div class="usage-item">
+                <div style="display: flex; justify-content: space-between; font-size: 0.84375rem; margin-bottom: 6px;">
+                  <span>Enrolled Students</span><strong>1,248 / 1,500 Enrolled</strong>
+                </div>
+                <div class="usage-bar-bg">
+                  <div class="usage-bar-fill" style="width: 83.2%;"></div>
+                </div>
+              </div>
+
+              <div class="usage-item">
+                <div style="display: flex; justify-content: space-between; font-size: 0.84375rem; margin-bottom: 6px;">
+                  <span>Monthly Parent SMS Alerts</span><strong>8,420 / 25,000</strong>
+                </div>
+                <div class="usage-bar-bg">
+                  <div class="usage-bar-fill" style="width: 33.6%; background: #6366F1;"></div>
+                </div>
+              </div>
+
+              <div class="usage-item">
+                <div style="display: flex; justify-content: space-between; font-size: 0.84375rem; margin-bottom: 6px;">
+                  <span>Faculty Teacher Seats</span><strong>84 / 100 Seats</strong>
+                </div>
+                <div class="usage-bar-bg">
+                  <div class="usage-bar-fill" style="width: 84%; background: #10B981;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Billing & Invoices Table -->
+          <div class="dash-card">
+            <div class="dash-card-title">
+              <span>Billing History & Invoices</span>
+              <button class="btn btn-secondary" onclick="alert('Export all invoices simulation')" style="padding: 4px 12px; font-size: 0.8125rem;">Export CSV</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Billing Date</th>
+                    <th>Amount</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>INV-2026-009</strong></td>
+                    <td>Sep 01, 2026</td>
+                    <td>$49.00 USD</td>
+                    <td>Growth Institution (Annual)</td>
+                    <td><span class="badge badge-teal">Paid</span></td>
+                    <td><button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px;" onclick="alert('Downloading invoice PDF simulation')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>INV-2026-008</strong></td>
+                    <td>Aug 01, 2026</td>
+                    <td>$49.00 USD</td>
+                    <td>Growth Institution (Annual)</td>
+                    <td><span class="badge badge-teal">Paid</span></td>
+                    <td><button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px;" onclick="alert('Downloading invoice PDF simulation')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> PDF</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 10: SETTINGS -->
+        <section class="view-panel" id="view-settings">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">School Academic Settings</h2>
+              <p class="dash-subtitle">Configure school profile, academic term calendar, and attendance quorum thresholds.</p>
+            </div>
+          </div>
+
+          <div class="dash-card" style="max-width: 600px;">
+            <div class="form-group">
+              <label class="form-label">School Name</label>
+              <input type="text" class="form-input" value="Oakridge International Academy">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Principal / Admin Email</label>
+              <input type="email" class="form-input" value="admin@school.edu">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mandatory Attendance Quorum (%)</label>
+              <input type="number" class="form-input" value="85">
+            </div>
+            <button class="btn btn-primary js-save-settings-btn">SAVE SCHOOL SETTINGS</button>
+          </div>
+        </section>
+
+        <!-- VIEW 11: HELP & SUPPORT -->
+        <section class="view-panel" id="view-help">
+          <div class="dash-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem;">Help & School Support</h2>
+              <p class="dash-subtitle">Teacher guides, parent onboarding FAQs, and software knowledge base.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item active">
+            <button class="accordion-header">
+              <span>How do teachers take daily roll-call on mobile?</span> <span>▼</span>
+            </button>
+            <div class="accordion-content">
+              Teachers navigate to Daily Attendance, select their assigned grade, tap present or absent for each student, and click "Submit Register". Absent students' guardians are notified immediately.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header">
+              <span>How does automated tuition fee invoicing work?</span> <span>▼</span>
+            </button>
+            <div class="accordion-content">
+              EduPulse automatically issues term fee statements based on your academic fee catalog. Parents receive SMS and email payment links supporting Credit Card, NetBanking, and UPI.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header">
+              <span>How are timetable clashes detected and resolved?</span> <span>▼</span>
+            </button>
+            <div class="accordion-content">
+              The AI scheduling engine prevents two subjects from booking the same room or teacher simultaneously. When a teacher takes sick leave, 1-click substitute allocation is suggested.
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Slide-out Notification Drawer -->
+  <div class="notification-drawer" id="notificationDrawer">
+    <div class="notification-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h3 style="font-size: 1.125rem; font-weight: 800;">Campus Notifications</h3>
+        <span class="badge badge-teal" style="font-size: 0.75rem; padding: 2px 8px;">3 New</span>
+      </div>
+      <button class="drawer-close-btn" id="closeNotifBtn" aria-label="Close Notifications" title="Close Drawer">&times;</button>
+    </div>
+
+    <div class="notification-list">
+      <div class="notification-item unread">
+        <div class="notif-item-header">
+          <span class="badge badge-dark" style="color: #EF4444; background: rgba(239, 68, 68, 0.12); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em;">ATTENDANCE</span>
+          <span class="notif-timestamp">10m ago</span>
+        </div>
+        <strong class="notif-item-title">18 Students Marked Absent Today</strong>
+        <p class="notif-item-desc">Automated SMS and WhatsApp absentee alerts have been dispatched to registered guardians.</p>
+      </div>
+
+      <div class="notification-item unread">
+        <div class="notif-item-header">
+          <span class="badge badge-teal" style="font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em;">FEES RECONCILED</span>
+          <span class="notif-timestamp">1h ago</span>
+        </div>
+        <strong class="notif-item-title">Term 2 Fee Online Receipt ($1,250)</strong>
+        <p class="notif-item-desc">Tuition fee received from Liam Miller's guardian via Stripe. Digital receipt emailed.</p>
+      </div>
+
+      <div class="notification-item">
+        <div class="notif-item-header">
+          <span class="badge badge-dark" style="font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em;">TIMETABLE</span>
+          <span class="notif-timestamp">3h ago</span>
+        </div>
+        <strong class="notif-item-title">Period 4 Substitution Completed</strong>
+        <p class="notif-item-desc">Mr. Devon Mills assigned to Grade 9-B Physics Practical covering for Ms. Henderson.</p>
+      </div>
+    </div>
+
+    <div class="notification-drawer-footer">
+      <button class="btn btn-secondary" id="markReadBtn" style="width: 100%; justify-content: center;">Mark All As Read</button>
+    </div>
+  </div>
+
+  <!-- Attendance Adjustment Modal -->
+  <div class="modal-overlay" id="adjustStockModal">
+    <div class="modal-box">
+      <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Update Student Attendance Record</h3>
+      <p style="font-size: 0.875rem; color: var(--dash-text-muted); margin-bottom: 20px;" id="modalItemTitle">Selected Student</p>
+      <form id="adjustStockForm">
+        <div class="form-group">
+          <label class="form-label">Attendance Status</label>
+          <select class="form-input">
+            <option>Present (On Time)</option>
+            <option>Late Check-in</option>
+            <option>Excused Medical Leave</option>
+            <option>Unexcused Absence</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Remarks / Guardian Note</label>
+          <input type="text" class="form-input" placeholder="Parent signed doctor's note submitted">
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" id="closeStockModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="toast-notification" id="toastNotification">
+    <span style="color: var(--dash-teal); font-weight: 800;">✓</span>
+    <span id="toastText">Action completed successfully.</span>
+  </div>
+
+  <script src="assets/js/dashboard.js"></script>
+</body>
+</html>

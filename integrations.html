@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecosystem Integrations | EduPulse School Management OS</title>
+  <meta name="description" content="Connect EduPulse with Google Classroom, Zoom, WhatsApp SMS gateways, fee payment processors, RFID hardware, and LMS tools for real-time school sync.">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <script>
+    (function() {
+      function safeGet(key, def) {
+        try { return localStorage.getItem(key) || def; } catch(e) { return def; }
+      }
+      function safeSet(key, val) {
+        try { localStorage.setItem(key, val); } catch(e) {}
+      }
+      var SVG_MOON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      var SVG_SUN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+      var SVG_RTL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>';
+      window.applyTheme = function(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        safeSet('edupulse_theme', theme);
+        var btns = document.querySelectorAll('.js-theme-toggle');
+        for(var i=0; i<btns.length; i++) {
+          btns[i].innerHTML = theme === 'dark' ? SVG_SUN : SVG_MOON;
+        }
+      };
+      window.toggleTheme = function() {
+        var curr = document.documentElement.getAttribute('data-theme') || 'light';
+        window.applyTheme(curr === 'dark' ? 'light' : 'dark');
+      };
+      window.applyRTL = function(dir) {
+        document.documentElement.setAttribute('dir', dir);
+        safeSet('edupulse_rtl', dir);
+        var btns = document.querySelectorAll('.js-rtl-toggle');
+        for(var i=0; i<btns.length; i++) {
+          btns[i].innerHTML = SVG_RTL;
+        }
+      };
+      window.toggleRTL = function() {
+        var curr = document.documentElement.getAttribute('dir') || 'ltr';
+        window.applyRTL(curr === 'rtl' ? 'ltr' : 'rtl');
+      };
+      window.openMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          mobileMenu.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+      window.closeMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
+      window.toggleMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          if (mobileMenu.classList.contains('active')) {
+            window.closeMobileMenu();
+          } else {
+            window.openMobileMenu();
+          }
+        }
+      };
+      var initTheme = safeGet('edupulse_theme', 'light');
+      var initRTL = safeGet('edupulse_rtl', 'ltr');
+      document.documentElement.setAttribute('data-theme', initTheme);
+      document.documentElement.setAttribute('dir', initRTL);
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" id="navLogo">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">EDUPULSE</span>
+          <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="home-2.html" class="nav-link">Home 2</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="features.html" class="nav-link">Features</a></li>
+          <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+          <li><a href="integrations.html" class="nav-link active">Integrations</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="control-btn js-theme-toggle" id="desktopThemeBtn" title="Toggle Theme" onclick="toggleTheme()" aria-label="Toggle Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+        <button class="control-btn js-rtl-toggle" id="desktopRTLBtn" title="Toggle RTL" onclick="toggleRTL()" aria-label="Toggle RTL Direction"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg></button>
+        <a href="dashboard.html" class="control-btn" title="Dashboard" aria-label="Open Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg></a>
+        <a href="login.html" class="btn btn-primary">Login →</a>
+      </div>
+
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation" onclick="openMobileMenu()">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-drawer">
+      <div>
+        <div class="mobile-drawer-header">
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">EDUPULSE</span>
+              <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+            </div>
+          </div>
+          <button type="button" class="mobile-close-btn" id="closeMenuBtn" onclick="closeMobileMenu()">&times;</button>
+        </div>
+        <ul class="mobile-nav-links">
+          <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+          <li><a href="home-2.html" class="mobile-nav-link">Home 2</a></li>
+          <li><a href="about.html" class="mobile-nav-link">About</a></li>
+          <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+          <li><a href="pricing.html" class="mobile-nav-link">Pricing</a></li>
+          <li><a href="integrations.html" class="mobile-nav-link active">Integrations</a></li>
+          <li><a href="contact.html" class="mobile-nav-link">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="mobile-controls">
+          <div class="mobile-controls-row">
+            <button class="control-btn js-theme-toggle" style="flex:1;" title="Toggle Theme" onclick="toggleTheme()" aria-label="Toggle Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+            <button class="control-btn js-rtl-toggle" style="flex:1;" title="Toggle RTL" onclick="toggleRTL()" aria-label="Toggle RTL Direction"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg></button>
+            <a href="dashboard.html" class="control-btn" style="flex:1; text-align:center;" title="Dashboard" aria-label="Open Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg></a>
+          </div>
+          <a href="login.html" class="btn btn-primary" style="width: 100%;">Login →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SECTION 01 — COMPACT INNER HERO WITH BG IMAGE
+       ========================================================================== -->
+  <section class="section inner-hero" style="
+    background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  ">
+    <div style="
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        linear-gradient(105deg, rgba(15, 23, 42,0.92) 0%, rgba(15, 23, 42,0.75) 60%, rgba(15, 23, 42,0.45) 100%),
+        radial-gradient(ellipse 70% 90% at 75% 50%, rgba(37, 99, 235,0.15) 0%, transparent 70%);
+    "></div>
+
+    <div class="container text-center" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center;">
+      <span class="eyebrow" style="background: rgba(37, 99, 235,0.18); border: 1px solid rgba(37, 99, 235,0.35); color: #38BDF8; margin-inline: auto;">CAMPUS ECOSYSTEM SYNC</span>
+      <h1 class="section-title" style="color: #FFFFFF; font-size: clamp(2.25rem, 4vw, 3.25rem); max-width: 800px; margin-inline: auto; margin-block: 16px 20px; text-align: center;">
+        CONNECT THE TOOLS YOUR SCHOOL ALREADY USES.
+      </h1>
+      <p class="section-desc" style="color: rgba(255,255,255,0.80); max-width: 640px; margin-inline: auto; text-align: center;">
+        Sync Google Classroom rosters, Zoom lectures, WhatsApp parent messaging, fee payment gateways, and RFID biometric turnstiles in real time.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       UNIQUE SECTION 01 — UNIFIED DATA HUB ARCHITECTURE (IMAGE & ANIMATED FLOW)
+       ========================================================================== -->
+  <section class="section" style="background: var(--bg-main); padding-block: 80px; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="hub-architecture-grid">
+        
+        <!-- Left Content -->
+        <div class="reveal">
+          <span class="eyebrow" style="background: var(--teal-light); color: var(--brand-teal);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"/><path d="M2 12h20"/></svg>
+            UNIFIED ACADEMIC HUB
+          </span>
+          <h2 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-block: 14px 18px;">
+            Universal Real-Time School Integration Engine
+          </h2>
+          <p class="section-desc" style="margin-bottom: 28px;">
+            EduPulse sits at the core of your educational institution. It continuously pulls attendance events from biometric gates, synchronizes LMS coursework, and logs fee reconciliations automatically.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+            <div class="hub-feature-item">
+              <div class="hub-icon-dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+              <div>
+                <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">Sub-Second Attendance & Biometric Sync</h4>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 2px;">RFID scans at school gates trigger instant parent WhatsApp & SMS notifications in under 200ms.</p>
+              </div>
+            </div>
+
+            <div class="hub-feature-item">
+              <div class="hub-icon-dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+              <div>
+                <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">Automated Student & Grade Mapping</h4>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 2px;">Intelligent algorithms match student IDs, classes, and term exams between Google Classroom and EduPulse.</p>
+              </div>
+            </div>
+
+            <div class="hub-feature-item">
+              <div class="hub-icon-dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
+              <div>
+                <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">Automated Tuition Fee Ledgers</h4>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 2px;">Direct payment reconciliation with Stripe, PayPal, Razorpay, and school bank accounts.</p>
+              </div>
+            </div>
+          </div>
+
+          <a href="pricing.html" class="btn btn-primary">START CAMPUS TRIAL NOW →</a>
+        </div>
+
+        <!-- Right Visual Showcase Image Frame -->
+        <div class="reveal delay-2">
+          <div class="hub-img-frame">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80" alt="EduPulse Academic Integration Hub" class="hub-main-img">
+            <div class="hub-img-overlay"></div>
+            
+            <!-- Animated Hotspot Chips -->
+            <div class="hub-hotspot hub-hotspot-1" style="top: 18%; left: 14%;">
+              <span class="pulse-dot" style="width:6px; height:6px; background:#38BDF8; border-radius:50%; box-shadow:0 0 6px #38BDF8;"></span>
+              <span>RFID Turnstiles Active</span>
+            </div>
+
+            <div class="hub-hotspot hub-hotspot-2" style="top: 22%; right: 12%;">
+              <span class="pulse-dot" style="width:6px; height:6px; background:#38BDF8; border-radius:50%; box-shadow:0 0 6px #38BDF8;"></span>
+              <span>Google Classroom Synced</span>
+            </div>
+
+            <div class="hub-hotspot hub-hotspot-3" style="bottom: 20%; left: 18%;">
+              <span class="pulse-dot" style="width:6px; height:6px; background:#38BDF8; border-radius:50%; box-shadow:0 0 6px #38BDF8;"></span>
+              <span>Tuition Fee Gateway OK</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       UNIQUE SECTION 02 — INSTANT 3-STEP SETUP WORKFLOW (SCHOOL CAMPUS IMAGE)
+       ========================================================================== -->
+  <section class="section" style="background: var(--bg-surface-elevated); padding-block: 80px; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="section-header text-center" style="margin-bottom: 56px;">
+        <span class="eyebrow" style="background: var(--teal-light); color: var(--brand-teal); margin-inline: auto;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          PLUG & PLAY ONBOARDING
+        </span>
+        <h2 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-block: 14px 18px;">
+          Connect Your School In 3 Simple Steps
+        </h2>
+        <p class="section-desc" style="max-width: 640px; margin-inline: auto;">
+          No complex coding or expensive IT implementation. Get your entire school linked in under 15 minutes.
+        </p>
+      </div>
+
+      <div class="workflow-split-grid">
+        <!-- Left Image Frame -->
+        <div class="reveal">
+          <div class="workflow-img-card">
+            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80" alt="Teacher instructing in modern classroom" class="workflow-img">
+            <div class="workflow-img-badge">
+              <div style="font-size: 0.75rem; color: #38BDF8; font-weight: 800; text-transform: uppercase;">CAMPUS STATUS</div>
+              <div style="font-size: 1.125rem; font-weight: 800; color: #FFF; margin-top: 2px;">Google Classroom & WhatsApp SMS: 100% Active</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Timeline Cards -->
+        <div class="workflow-steps-list">
+          
+          <div class="workflow-step-card reveal delay-1">
+            <div class="step-num-badge">01</div>
+            <div>
+              <h3 style="font-size: 1.25rem; margin-bottom: 6px;">Select & Authorize Academic Tool</h3>
+              <p style="font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6;">
+                Choose your school's LMS, video conferencing, or SMS gateway from our directory and log in with 1-click OAuth security.
+              </p>
+            </div>
+          </div>
+
+          <div class="workflow-step-card reveal delay-2">
+            <div class="step-num-badge">02</div>
+            <div>
+              <h3 style="font-size: 1.25rem; margin-bottom: 6px;">Auto-Map Rosters & Gradebooks</h3>
+              <p style="font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6;">
+                EduPulse automatically matches student registration IDs, homeroom sections, and faculty timetable assignments.
+              </p>
+            </div>
+          </div>
+
+          <div class="workflow-step-card reveal delay-3">
+            <div class="step-num-badge">03</div>
+            <div>
+              <h3 style="font-size: 1.25rem; margin-bottom: 6px;">Turn On Automated Sync</h3>
+              <p style="font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6;">
+                Sit back while EduPulse handles real-time attendance roll call alerts, exam report releases, and tuition fee reminders.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       UNIQUE SECTION 03 — DEVELOPER REST API & WEBHOOK TERMINAL SHOWCASE
+       ========================================================================== -->
+  <section class="section" style="background: var(--bg-main); padding-block: 80px; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="section-header text-center" style="margin-bottom: 48px;">
+        <span class="eyebrow" style="background: var(--teal-light); color: var(--brand-teal); margin-inline: auto;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          CUSTOM DEVELOPER PLATFORM
+        </span>
+        <h2 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-block: 14px 18px;">
+          Extensible Academic REST APIs & Real-time Webhooks
+        </h2>
+        <p class="section-desc" style="max-width: 640px; margin-inline: auto;">
+          Need a custom integration with legacy state government portals or biometric hardware? Connect using our secure REST API.
+        </p>
+      </div>
+
+      <div class="dev-terminal-grid">
+        
+        <!-- Left Interactive Terminal Box -->
+        <div class="reveal">
+          <div class="dev-terminal-frame">
+            <div class="terminal-bar">
+              <div class="terminal-bar-top">
+                <div class="terminal-dots">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                </div>
+                <span class="terminal-title-chip">REST API v2.4</span>
+                <span class="terminal-status"><span class="pulse-dot"></span> 200 OK</span>
+              </div>
+              <div class="terminal-tabs">
+                <span class="terminal-tab active"><span class="tab-method method-get">GET</span> /attendance</span>
+                <span class="terminal-tab"><span class="tab-method method-post">POST</span> /fees</span>
+                <span class="terminal-tab"><span class="tab-method method-hook">HOOK</span> /webhooks</span>
+              </div>
+            </div>
+
+            <div class="terminal-body">
+<pre><code><span style="color:#6A9955;">// GET /v2/attendance/sync</span>
+{
+  <span style="color:#9CDCFE;">"status"</span>: <span style="color:#CE9178;">"success"</span>,
+  <span style="color:#9CDCFE;">"timestamp"</span>: <span style="color:#CE9178;">"2026-11-11T08:30Z"</span>,
+  <span style="color:#9CDCFE;">"section"</span>: <span style="color:#CE9178;">"Grade 10-A (Physics)"</span>,
+  <span style="color:#9CDCFE;">"faculty"</span>: <span style="color:#CE9178;">"Dr. Marcus Chen"</span>,
+  <span style="color:#9CDCFE;">"roll_call"</span>: {
+    <span style="color:#9CDCFE;">"enrolled"</span>: <span style="color:#B5CEA8;">40</span>,
+    <span style="color:#9CDCFE;">"present"</span>: <span style="color:#B5CEA8;">38</span>,
+    <span style="color:#9CDCFE;">"absent"</span>: <span style="color:#B5CEA8;">2</span>,
+    <span style="color:#9CDCFE;">"notified"</span>: <span style="color:#569CD6;">true</span>
+  },
+  <span style="color:#9CDCFE;">"latency_ms"</span>: <span style="color:#B5CEA8;">32</span>
+}</code></pre>
+            </div>
+
+            <div class="terminal-footer">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> API Latency: <strong>32ms</strong></span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Auth: <strong>Bearer JWT Token</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Developer Specs Column -->
+        <div class="dev-terminal-specs reveal delay-2">
+          <span class="eyebrow" style="margin-bottom: 12px;">DEVELOPER FIRST</span>
+          <h3 class="dev-specs-title">Built for School Tech Teams & Integrators</h3>
+          <p class="dev-specs-desc">
+            Our API offers complete coverage for attendance logging, student enrollment, fee invoicing, and instant parent webhook notifications.
+          </p>
+
+          <ul class="dev-spec-list">
+            <li>
+              <span class="dev-spec-icon">✓</span>
+              <div><strong>Real-time Webhook Triggers</strong> for student gate entry & absence alerts</div>
+            </li>
+            <li>
+              <span class="dev-spec-icon">✓</span>
+              <div><strong>FERPA-Compliant API Security</strong> & encrypted SSL payloads</div>
+            </li>
+            <li>
+              <span class="dev-spec-icon">✓</span>
+              <div><strong>Academic Sandbox Environment</strong> for risk-free pre-term testing</div>
+            </li>
+          </ul>
+
+          <div class="dev-specs-cta">
+            <a href="contact.html" class="btn btn-secondary">VIEW API DOCUMENTATION →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       UNIQUE SECTION 04 — HARDWARE & COMMUNICATION HUB
+       ========================================================================== -->
+  <section class="section" style="background: var(--bg-surface-elevated); padding-block: 80px; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="fulfillment-grid">
+        
+        <!-- Left Content & Integration Badges -->
+        <div class="reveal" style="display: flex; flex-direction: column; justify-content: center;">
+          <span class="eyebrow" style="background: var(--teal-light); color: var(--brand-teal);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            HARDWARE & CHANNELS
+          </span>
+          <h2 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-block: 14px 18px;">
+            Automated Parent Communication & Gate Hardware Sync
+          </h2>
+          <p class="section-desc" style="margin-bottom: 28px;">
+            Seamlessly connect your campus RFID turnstiles, biometric scanners, and multi-channel parent broadcast gateways into one synchronized control panel.
+          </p>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px;">
+            <span class="carrier-chip">WhatsApp Business API</span>
+            <span class="carrier-chip">Twilio SMS</span>
+            <span class="carrier-chip">RFID Turnstiles</span>
+            <span class="carrier-chip">Google Classroom</span>
+            <span class="carrier-chip">Zoom Education</span>
+            <span class="carrier-chip">Stripe Tuition</span>
+          </div>
+
+          <div>
+            <a href="dashboard.html" class="btn btn-primary">EXPLORE CAMPUS DEMO →</a>
+          </div>
+        </div>
+
+        <!-- Right Fulfillment Dashboard Image Frame -->
+        <div class="reveal delay-2">
+          <div class="fulfillment-img-frame">
+            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80" alt="Students using modern technology in school laboratory" class="fulfillment-img">
+            
+            <div class="fulfillment-stat-overlay">
+              <div style="font-size: 0.75rem; color: #38BDF8; font-weight: 800; text-transform: uppercase;">DAILY CAMPUS DISPATCH</div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: #FFF; margin-top: 2px;">48,200 Attendance Scans & Parent SMS Today</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">EDUPULSE</span>
+              <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+            </div>
+          </div>
+          <p>Practical, modern SaaS school management software designed for K-12 academies, international schools, and multi-campus districts.</p>
+          <div class="footer-social-links">
+            <a href="#" class="footer-social-icon" aria-label="X (formerly Twitter)" title="X (Twitter)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="LinkedIn" title="LinkedIn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.74a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="Facebook" title="Facebook">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.8c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.89h-2.33v6.99C18.34 21.12 22 16.99 22 12z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="Instagram" title="Instagram">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="GitHub" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">PRODUCT</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="home-2.html">Home 2</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">RESOURCES</h4>
+          <ul class="footer-links">
+            <li><a href="integrations.html">Integrations</a></li>
+            <li><a href="dashboard.html#help">Help & Support</a></li>
+            <li><a href="login.html">School Portal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">ACCOUNT</h4>
+          <ul class="footer-links">
+            <li><a href="login.html">Login</a></li>
+            <li><a href="pricing.html">Start Free</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">NEWSLETTER</h4>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 16px;">SUBSCRIBE →</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 EduPulse. All rights reserved. School Management OS.</div>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP BUTTON -->
+  <button class="back-to-top" id="backToTopBtn" aria-label="Back to top" title="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

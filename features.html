@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Management Features | EduPulse</title>
+  <meta name="description" content="Explore EduPulse school management capabilities: student attendance, automated tuition fee collection, dynamic AI timetables, parent communication, and official report cards.">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <script>
+    (function() {
+      function safeGet(key, def) {
+        try { return localStorage.getItem(key) || def; } catch(e) { return def; }
+      }
+      function safeSet(key, val) {
+        try { localStorage.setItem(key, val); } catch(e) {}
+      }
+      var SVG_MOON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      var SVG_SUN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+      var SVG_RTL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>';
+      window.applyTheme = function(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        safeSet('edupulse_theme', theme);
+        var btns = document.querySelectorAll('.js-theme-toggle');
+        for(var i=0; i<btns.length; i++) {
+          btns[i].innerHTML = theme === 'dark' ? SVG_SUN : SVG_MOON;
+        }
+      };
+      window.toggleTheme = function() {
+        var curr = document.documentElement.getAttribute('data-theme') || 'light';
+        window.applyTheme(curr === 'dark' ? 'light' : 'dark');
+      };
+      window.applyRTL = function(dir) {
+        document.documentElement.setAttribute('dir', dir);
+        safeSet('edupulse_rtl', dir);
+        var btns = document.querySelectorAll('.js-rtl-toggle');
+        for(var i=0; i<btns.length; i++) {
+          btns[i].innerHTML = SVG_RTL;
+        }
+      };
+      window.toggleRTL = function() {
+        var curr = document.documentElement.getAttribute('dir') || 'ltr';
+        window.applyRTL(curr === 'rtl' ? 'ltr' : 'rtl');
+      };
+      window.openMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          mobileMenu.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+      window.closeMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
+      window.toggleMobileMenu = function() {
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+          if (mobileMenu.classList.contains('active')) {
+            window.closeMobileMenu();
+          } else {
+            window.openMobileMenu();
+          }
+        }
+      };
+      var initTheme = safeGet('edupulse_theme', 'light');
+      var initRTL = safeGet('edupulse_rtl', 'ltr');
+      document.documentElement.setAttribute('data-theme', initTheme);
+      document.documentElement.setAttribute('dir', initRTL);
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" id="navLogo">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">EDUPULSE</span>
+          <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="home-2.html" class="nav-link">Home 2</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="features.html" class="nav-link active">Features</a></li>
+          <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+          <li><a href="integrations.html" class="nav-link">Integrations</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="control-btn js-theme-toggle" id="desktopThemeBtn" title="Toggle Theme" onclick="toggleTheme()" aria-label="Toggle Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+        <button class="control-btn js-rtl-toggle" id="desktopRTLBtn" title="Toggle RTL" onclick="toggleRTL()" aria-label="Toggle RTL Direction"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg></button>
+        <a href="dashboard.html" class="control-btn" title="School Admin Dashboard" aria-label="Open School Admin Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg></a>
+        <a href="login.html" class="btn btn-primary">Login →</a>
+      </div>
+
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation" onclick="openMobileMenu()">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-drawer">
+      <div>
+        <div class="mobile-drawer-header">
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">EDUPULSE</span>
+              <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+            </div>
+          </div>
+          <button type="button" class="mobile-close-btn" id="closeMenuBtn" onclick="closeMobileMenu()">&times;</button>
+        </div>
+        <ul class="mobile-nav-links">
+          <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+          <li><a href="home-2.html" class="mobile-nav-link">Home 2</a></li>
+          <li><a href="about.html" class="mobile-nav-link">About</a></li>
+          <li><a href="features.html" class="mobile-nav-link active">Features</a></li>
+          <li><a href="pricing.html" class="mobile-nav-link">Pricing</a></li>
+          <li><a href="integrations.html" class="mobile-nav-link">Integrations</a></li>
+          <li><a href="contact.html" class="mobile-nav-link">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="mobile-controls">
+          <div class="mobile-controls-row">
+            <button class="control-btn js-theme-toggle" style="flex:1;" title="Toggle Theme" onclick="toggleTheme()" aria-label="Toggle Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+            <button class="control-btn js-rtl-toggle" style="flex:1;" title="Toggle RTL" onclick="toggleRTL()" aria-label="Toggle RTL Direction"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg></button>
+            <a href="dashboard.html" class="control-btn" style="flex:1; text-align:center;" title="School Admin Dashboard" aria-label="Open School Admin Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg></a>
+          </div>
+          <a href="login.html" class="btn btn-primary" style="width: 100%;">Login →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SECTION 01 — COMPACT INNER HERO WITH BG IMAGE
+       ========================================================================== -->
+  <section class="section inner-hero" style="
+    background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  ">
+    <div style="
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        linear-gradient(105deg, rgba(15, 23, 42,0.92) 0%, rgba(15, 23, 42,0.75) 60%, rgba(15, 23, 42,0.45) 100%),
+        radial-gradient(ellipse 70% 90% at 75% 50%, rgba(37, 99, 235,0.15) 0%, transparent 70%);
+    "></div>
+
+    <div class="container text-center" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center;">
+      <span class="eyebrow" style="background: rgba(37, 99, 235,0.18); border: 1px solid rgba(37, 99, 235,0.35); color: #38BDF8; margin-inline: auto;">CAMPUS CAPABILITIES</span>
+      <h1 class="section-title" style="color: #FFFFFF; font-size: clamp(2.25rem, 4vw, 3.25rem); max-width: 800px; margin-inline: auto; margin-block: 16px 20px; text-align: center;">
+        EVERYTHING NEED TO RUN A, CONNECTED SCHOOL.
+      </h1>
+      <p class="section-desc" style="color: rgba(255,255,255,0.80); max-width: 640px; margin-inline: auto; text-align: center;">
+        From student attendance and fee invoicing to dynamic AI timetables, parent messaging, and official report cards, EduPulse centralizes all your academic operations.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 02 — FEATURE EXPLORER INTERACTIVE TABS & LIVE MOCKUP SHOWCASE
+       ========================================================================== -->
+  <section class="section feature-explorer-section" style="background: var(--bg-main); border-block: 1px solid var(--border-color); padding-block: 80px;">
+    <div class="container">
+      
+      <!-- Section Header -->
+      <div class="section-header text-center" style="margin-bottom: 48px;">
+        <span class="eyebrow" style="background: var(--teal-light); color: var(--brand-teal); margin-inline: auto;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          INTERACTIVE MODULE EXPLORER
+        </span>
+        <h2 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-block: 12px 16px;">
+          Modular Architecture Built For School Leadership & Staff
+        </h2>
+        <p class="section-desc" style="max-width: 680px; margin-inline: auto;">
+          Select any school management module below to explore real-time workflows, operational impact metrics, and interactive dashboard capabilities.
+        </p>
+      </div>
+
+      <!-- Feature Pill Tabs Nav (Scrollable & Responsive with SVG Icons) -->
+      <div class="feature-tabs-wrapper">
+        <div class="feature-tabs-nav" role="tablist">
+          <button class="feature-tab-btn active" data-feature="tracking" role="tab" aria-selected="true" onclick="renderFeatureTab('tracking')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+            <span>Attendance & Roll Call</span>
+          </button>
+          <button class="feature-tab-btn" data-feature="alerts" role="tab" onclick="renderFeatureTab('alerts')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Parent Communication & SMS</span>
+          </button>
+          <button class="feature-tab-btn" data-feature="orders" role="tab" onclick="renderFeatureTab('orders')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <span>Tuition Fees & Payments</span>
+          </button>
+          <button class="feature-tab-btn" data-feature="location" role="tab" onclick="renderFeatureTab('location')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>AI Timetable & Substitution</span>
+          </button>
+          <button class="feature-tab-btn" data-feature="sales" role="tab" onclick="renderFeatureTab('sales')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Gradebook & Academic Analytics</span>
+          </button>
+          <button class="feature-tab-btn" data-feature="reports" role="tab" onclick="renderFeatureTab('reports')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Official Report Cards</span>
+          </button>
+          <button class="feature-tab-btn" data-feature="suppliers" role="tab" onclick="renderFeatureTab('suppliers')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Teacher & Staff Directory</span>
+          </button>
+          <button class="feature-tab-btn" data-feature="adjustments" role="tab" onclick="renderFeatureTab('adjustments')">
+            <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            <span>Student Wellbeing & Behavior</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Feature Detail Container (2-Column Showcase Grid) -->
+      <div class="feature-showcase-container">
+        <div class="feature-showcase-grid">
+          
+          <!-- Left Info Column -->
+          <div class="feature-info-card">
+            <div class="feature-badge-wrapper">
+              <span class="eyebrow" id="featureDetailBadge">
+                <span class="badge-dot"></span> Attendance Engine
+              </span>
+            </div>
+            
+            <h3 id="featureDetailTitle" class="feature-card-title">Real-time Attendance & RFID Gate Tracking</h3>
+            <p id="featureDetailDesc" class="feature-card-desc">
+              Gain complete visibility over student and staff attendance with biometric check-in, classroom roll-call, and auto-computed term attendance ratios.
+            </p>
+
+            <div class="feature-impact-box">
+              <h4 class="impact-box-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--brand-teal)" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Key Institutional Impact
+              </h4>
+              <ul class="impact-list" id="featureDetailImpact">
+                <li><span class="impact-icon">✓</span> <span class="impact-text">1-click teacher mobile roll-call with automated absentee flagging</span></li>
+                <li><span class="impact-icon">✓</span> <span class="impact-text">Biometric & RFID card integration for turnstiles and school buses</span></li>
+                <li><span class="impact-icon">✓</span> <span class="impact-text">Automated parent SMS & WhatsApp alerts sent within 5 minutes of roll call</span></li>
+              </ul>
+            </div>
+
+            <div class="btn-group feature-action-btns">
+              <a href="dashboard.html" class="btn btn-primary">
+                Explore Module in App →
+              </a>
+              <a href="pricing.html" class="btn btn-secondary">
+                Start Free Trial
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Right Interactive Visual UI Mockup Column -->
+          <div class="feature-visual-wrapper">
+            <div class="visual-mockup-frame">
+              <div class="mockup-header-bar">
+                <div class="mockup-dots">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                </div>
+                <div class="mockup-title-chip">EDUPULSE ENGINE v3.2 • LIVE DEMO</div>
+                <div class="mockup-pulse-status">
+                  <span class="pulse-ring"></span>
+                  LIVE
+                </div>
+              </div>
+              
+              <!-- Dynamic Content Injector with Pre-rendered Default Content -->
+              <div class="mockup-body-content" id="featureVisualContent">
+                <div class="mock-widget">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <div>
+                      <span style="font-size:0.75rem; color:#98A2B3; text-transform:uppercase; letter-spacing:0.05em; font-weight:700;">Live Morning Attendance Roll Call</span>
+                      <div style="font-size:1.0625rem; font-weight:800; color:#FFF; margin-top:2px;">Grade 10-A • Room 302 (Homeroom)</div>
+                    </div>
+                    <span style="background:rgba(37, 99, 235,0.18); border:1px solid rgba(37, 99, 235,0.4); color:#38BDF8; padding:4px 10px; border-radius:12px; font-size:0.75rem; font-weight:700;">97.4% Present</span>
+                  </div>
+
+                  <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="background:rgba(37, 99, 235,0.2); color:#38BDF8; width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem;">RFID</span>
+                        <div>
+                          <div style="font-size:0.875rem; font-weight:700; color:#FFF;">Main Gate Turnstile Scanner #2</div>
+                          <div style="font-size:0.75rem; color:#98A2B3;">38 Students Scanned In • 08:14 AM</div>
+                        </div>
+                      </div>
+                      <span style="color:#38BDF8; font-size:0.75rem; font-weight:700; display:flex; align-items:center; gap:4px;"><span style="width:6px; height:6px; background:#38BDF8; border-radius:50%;"></span> Verified</span>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="background:rgba(239,68,68,0.2); color:#FCA5A5; width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem;">ABS</span>
+                        <div>
+                          <div style="font-size:0.875rem; font-weight:700; color:#FFF;">Ethan Brooks (Roll #14) - Absent</div>
+                          <div style="font-size:0.75rem; color:#98A2B3;">SMS Alert sent to Parent (+1 555-0192)</div>
+                        </div>
+                      </div>
+                      <span style="color:#38BDF8; font-size:0.75rem; font-weight:700; display:flex; align-items:center; gap:4px;"><span style="width:6px; height:6px; background:#38BDF8; border-radius:50%;"></span> SMS Delivered</span>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="background:rgba(99,102,241,0.2); color:#A5B4FC; width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem;">APP</span>
+                        <div>
+                          <div style="font-size:0.875rem; font-weight:700; color:#FFF;">Teacher Portal: Mrs. Henderson</div>
+                          <div style="font-size:0.75rem; color:#98A2B3;">Daily Register Signed & Submitted</div>
+                        </div>
+                      </div>
+                      <span style="color:#38BDF8; font-size:0.75rem; font-weight:700; display:flex; align-items:center; gap:4px;"><span style="width:6px; height:6px; background:#38BDF8; border-radius:50%;"></span> Synced</span>
+                    </div>
+                  </div>
+
+                  <div style="margin-top:16px; background:rgba(37, 99, 235,0.08); border:1px dashed rgba(37, 99, 235,0.3); border-radius:8px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; font-size:0.8125rem;">
+                    <span style="color:#98A2B3;">Campus Gate Status: <strong style="color:#FFF;">All 4 Gates Online</strong></span>
+                    <span style="color:#38BDF8; font-weight:700;">Sync Latency: 0.02s</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 03 — INTERACTIVE SCHOOL ROI & ADMINISTRATIVE TIME SAVINGS CALCULATOR
+       ========================================================================== -->
+  <section class="section roi-calculator-section" id="roi-calculator">
+    <div class="container">
+      
+      <!-- Section Header -->
+      <div class="section-header text-center" style="margin-bottom: 48px;">
+        <span class="eyebrow" style="background: #EFF6FF; border: 1px solid #BFDBFE; color: #2563EB; margin-inline: auto;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          INSTITUTIONAL ROI ESTIMATOR
+        </span>
+        <h2 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-block: 12px 16px; letter-spacing: -0.025em;">
+          Calculate Your School's <span class="gradient-text">Annual Financial & Time Recovery</span>
+        </h2>
+        <p class="section-desc" style="max-width: 680px; margin-inline: auto;">
+          Adjust your monthly school tuition volume, enrolled student count, and overdue fee rate to project your net annual financial recovery with EduPulse.
+        </p>
+      </div>
+
+      <!-- ROI Interactive Box -->
+      <div class="roi-calculator-box">
+        <div class="roi-grid-wrapper">
+          
+          <!-- Sliders Column -->
+          <div>
+            <!-- Slider 1: Tuition Volume -->
+            <div class="roi-slider-card">
+              <div class="roi-slider-header">
+                <span class="roi-slider-label">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                  Monthly School Fee Volume ($)
+                </span>
+                <span class="roi-slider-val" id="valRevenue">$85,000</span>
+              </div>
+              <input type="range" id="inputRevenue" class="roi-range-input" min="10000" max="500000" step="5000" value="85000" oninput="updateRoiCalc()">
+              <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748B; font-weight:600; margin-top:8px;">
+                <span>$10k</span>
+                <span>$250k</span>
+                <span>$500k+</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Student Count -->
+            <div class="roi-slider-card">
+              <div class="roi-slider-header">
+                <span class="roi-slider-label">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  Total Enrolled Students
+                </span>
+                <span class="roi-slider-val" id="valSKUs">1,200 Students</span>
+              </div>
+              <input type="range" id="inputSKUs" class="roi-range-input" min="100" max="5000" step="50" value="1200" oninput="updateRoiCalc()">
+              <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748B; font-weight:600; margin-top:8px;">
+                <span>100</span>
+                <span>2,500</span>
+                <span>5,000+</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: Overdue Fee Rate -->
+            <div class="roi-slider-card">
+              <div class="roi-slider-header">
+                <span class="roi-slider-label">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Est. Overdue & Late Fee Rate
+                </span>
+                <span class="roi-slider-val" id="valRate">5.0%</span>
+              </div>
+              <input type="range" id="inputRate" class="roi-range-input" min="1.0" max="15.0" step="0.5" value="5.0" oninput="updateRoiCalc()">
+              <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748B; font-weight:600; margin-top:8px;">
+                <span>1% (Low)</span>
+                <span>5% (Avg)</span>
+                <span>15% (High)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calculated Output Cards Grid -->
+          <div class="roi-output-grid">
+            
+            <!-- Card 1: Fees Recovered -->
+            <div class="roi-metric-card card-blue">
+              <div class="roi-metric-top">
+                <span class="roi-metric-label">Uncollected Fees Recovered</span>
+                <div class="roi-metric-pill-icon blue">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+              </div>
+              <div>
+                <div class="roi-metric-number num-blue" id="outputSavings">$33,150</div>
+                <span class="roi-metric-sub">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  Automated parent payment links
+                </span>
+              </div>
+            </div>
+
+            <!-- Card 2: Hours Reclaimed -->
+            <div class="roi-metric-card card-sky">
+              <div class="roi-metric-top">
+                <span class="roi-metric-label">Monthly Staff Hours Saved</span>
+                <div class="roi-metric-pill-icon sky">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+              </div>
+              <div>
+                <div class="roi-metric-number num-dark" id="outputHours">42 hrs</div>
+                <span class="roi-metric-sub">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  Eliminated paperwork & manual rolls
+                </span>
+              </div>
+            </div>
+
+            <!-- Card 3: Estimated ROI -->
+            <div class="roi-metric-card card-emerald">
+              <div class="roi-metric-top">
+                <span class="roi-metric-label">Estimated Software ROI</span>
+                <div class="roi-metric-pill-icon emerald">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+              </div>
+              <div>
+                <div class="roi-metric-number num-emerald" id="outputROI">18.4x</div>
+                <span class="roi-metric-sub">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  Net return on EduPulse subscription
+                </span>
+              </div>
+            </div>
+
+            <!-- Card 4: Parent Engagement (Featured) -->
+            <div class="roi-metric-card roi-metric-featured">
+              <div class="roi-metric-top">
+                <span class="roi-metric-label">Parent Engagement Boost</span>
+                <span class="roi-feature-badge">★ TOP ADVANTAGE</span>
+              </div>
+              <div>
+                <div class="roi-metric-number" id="outputEngagement">+42.5%</div>
+                <span class="roi-metric-sub">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  Direct mobile portal responsiveness
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="roi-footer-bar">
+          <div style="font-size: 0.8125rem; color: #64748B; display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span>Calculations based on verified K-12 operational benchmarks across <strong>1,450+ EduPulse school campuses</strong>.</span>
+          </div>
+          <a href="pricing.html" class="btn btn-primary">
+            Start Free Trial & Lock In Savings →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 04 — FEATURE MATRIX: EDUPULSE VS SPREADSHEETS & LEGACY SIS
+       ========================================================================== -->
+  <section class="section comparison-section" id="comparison">
+    <div class="container">
+      
+      <!-- Section Header -->
+      <div class="section-header text-center" style="margin-bottom: 40px;">
+        <span class="eyebrow" style="background: var(--teal-light); color: var(--brand-teal); margin-inline: auto;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          PLATFORM COMPARISON
+        </span>
+        <h2 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-block: 12px 16px;">
+          EduPulse vs. Traditional Paper Registers & Legacy SIS
+        </h2>
+        <p class="section-desc" style="max-width: 680px; margin-inline: auto;">
+          Compare how modern cloud education automation compares to error-prone spreadsheets and clunky old-school school server systems.
+        </p>
+      </div>
+
+      <!-- Capability Filter Pills -->
+      <div class="comp-filter-group">
+        <button class="comp-filter-btn active" onclick="filterCompTable('all', this)">All Features (7)</button>
+        <button class="comp-filter-btn" onclick="filterCompTable('automation', this)">Attendance & Alerts</button>
+        <button class="comp-filter-btn" onclick="filterCompTable('multi-channel', this)">Fees & Portals</button>
+        <button class="comp-filter-btn" onclick="filterCompTable('operations', this)">Timetables & Academics</button>
+      </div>
+
+      <!-- Comparison Matrix Table -->
+      <div class="comp-table-wrapper">
+        <table class="comp-table" id="comparisonTable">
+          <thead>
+            <tr>
+              <th style="width: 38%;">Feature / Capability</th>
+              <th class="col-edupulse" style="width: 24%;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span>EduPulse SaaS</span>
+                  <span style="background:var(--brand-teal); color:#FFF; font-size:0.65rem; padding:2px 6px; border-radius:4px; font-weight:800;">RECOMMENDED</span>
+                </div>
+              </th>
+              <th style="width: 19%;">Excel / Paper Registers</th>
+              <th style="width: 19%;">Legacy On-Premises SIS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-cat="automation">
+              <td>
+                <strong>Real-Time Roll Call & Absentee SMS</strong>
+                <div style="font-size:0.78125rem; color:var(--text-muted);">Syncs classroom attendance and notifies parents instantly via SMS/WhatsApp</div>
+              </td>
+              <td class="col-edupulse">
+                <span class="comp-status-check">✓ Instant Cloud Sync</span>
+              </td>
+              <td>
+                <span class="comp-status-cross">✕ Manual Paper Marking</span>
+              </td>
+              <td>
+                <span class="comp-status-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> End-of-Day Batch Export</span>
+              </td>
+            </tr>
+
+            <tr data-cat="multi-channel">
+              <td>
+                <strong>Automated Fee Invoicing & Online Gateway</strong>
+                <div style="font-size:0.78125rem; color:var(--text-muted);">Recurring term tuition invoices with 1-click parent payment links</div>
+              </td>
+              <td class="col-edupulse">
+                <span class="comp-status-check">✓ Instant Online Receipts</span>
+              </td>
+              <td>
+                <span class="comp-status-cross">✕ Paper Receipts & Bank Lines</span>
+              </td>
+              <td>
+                <span class="comp-status-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Basic Accounting Module</span>
+              </td>
+            </tr>
+
+            <tr data-cat="operations">
+              <td>
+                <strong>AI Timetable & Teacher Substitution</strong>
+                <div style="font-size:0.78125rem; color:var(--text-muted);">Clash-free scheduling honoring teacher workloads and room allocations</div>
+              </td>
+              <td class="col-edupulse">
+                <span class="comp-status-check">✓ 1-Click Clash-Free Scheduling</span>
+              </td>
+              <td>
+                <span class="comp-status-cross">✕ Cluttered Spreadsheets</span>
+              </td>
+              <td>
+                <span class="comp-status-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Rigid Manual Timetable</span>
+              </td>
+            </tr>
+
+            <tr data-cat="multi-channel">
+              <td>
+                <strong>Parent & Student Mobile Portal</strong>
+                <div style="font-size:0.78125rem; color:var(--text-muted);">Real-time grades, attendance records, homework, and teacher messaging</div>
+              </td>
+              <td class="col-edupulse">
+                <span class="comp-status-check">✓ Dedicated Web & Mobile App</span>
+              </td>
+              <td>
+                <span class="comp-status-cross">✕ Printed Paper Letters</span>
+              </td>
+              <td>
+                <span class="comp-status-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Outdated Desktop Web Only</span>
+              </td>
+            </tr>
+
+            <tr data-cat="operations">
+              <td>
+                <strong>Curriculum-Aligned Report Cards</strong>
+                <div style="font-size:0.78125rem; color:var(--text-muted);">US K-12, IB, CBSE, ICSE, and custom grading schemes in one click</div>
+              </td>
+              <td class="col-edupulse">
+                <span class="comp-status-check">✓ Automated PDF & Email Delivery</span>
+              </td>
+              <td>
+                <span class="comp-status-cross">✕ Manual Mail Merge</span>
+              </td>
+              <td>
+                <span class="comp-status-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Requires Custom Report Writer</span>
+              </td>
+            </tr>
+
+            <tr data-cat="operations">
+              <td>
+                <strong>Student Health & Incident Audit Logs</strong>
+                <div style="font-size:0.78125rem; color:var(--text-muted);">Confidential nurse logs, behavioral points, and counselor records</div>
+              </td>
+              <td class="col-edupulse">
+                <span class="comp-status-check">✓ FERPA / HIPAA Compliant</span>
+              </td>
+              <td>
+                <span class="comp-status-cross">✕ Insecure Paper Folders</span>
+              </td>
+              <td>
+                <span class="comp-status-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Basic Text Notes</span>
+              </td>
+            </tr>
+
+            <tr data-cat="multi-channel">
+              <td>
+                <strong>Cloud Multi-Campus Administration</strong>
+                <div style="font-size:0.78125rem; color:var(--text-muted);">Manage multiple branches, junior colleges, and district buildings centrally</div>
+              </td>
+              <td class="col-edupulse">
+                <span class="comp-status-check">✓ Unlimited Campuses & Roles</span>
+              </td>
+              <td>
+                <span class="comp-status-cross">✕ Disconnected Spreadsheets</span>
+              </td>
+              <td>
+                <span class="comp-status-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Requires Costly VPNs & Servers</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Scripts for ROI Calculator and Comparison Matrix -->
+  <script>
+    function updateSliderTrack(el) {
+      if (!el) return;
+      const min = parseFloat(el.min) || 0;
+      const max = parseFloat(el.max) || 100;
+      const val = parseFloat(el.value) || 0;
+      const pct = ((val - min) / (max - min)) * 100;
+      el.style.background = 'linear-gradient(to right, #2563EB 0%, #38BDF8 ' + pct + '%, #E2E8F0 ' + pct + '%, #E2E8F0 100%)';
+    }
+
+    function updateRoiCalc() {
+      const inputRev = document.getElementById('inputRevenue');
+      const inputSKUs = document.getElementById('inputSKUs');
+      const inputRate = document.getElementById('inputRate');
+
+      const revenue = parseFloat(inputRev.value) || 85000;
+      const students = parseFloat(inputSKUs.value) || 1200;
+      const rate = parseFloat(inputRate.value) || 5.0;
+
+      updateSliderTrack(inputRev);
+      updateSliderTrack(inputSKUs);
+      updateSliderTrack(inputRate);
+
+      document.getElementById('valRevenue').textContent = '$' + revenue.toLocaleString();
+      document.getElementById('valSKUs').textContent = students.toLocaleString() + ' Students';
+      document.getElementById('valRate').textContent = rate.toFixed(1) + '%';
+
+      const annualRev = revenue * 12;
+      const annualLossPrevented = Math.round(annualRev * (rate / 100) * 0.65);
+      const hoursSaved = Math.round(students * 0.035);
+      const annualSubCost = 1800;
+      const netRoi = Math.max(2.4, (annualLossPrevented / annualSubCost)).toFixed(1);
+
+      document.getElementById('outputSavings').textContent = '$' + annualLossPrevented.toLocaleString();
+      document.getElementById('outputHours').textContent = hoursSaved + ' hrs';
+      document.getElementById('outputROI').textContent = netRoi + 'x';
+    }
+
+    function filterCompTable(category, btnEl) {
+      const buttons = document.querySelectorAll('.comp-filter-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const rows = document.querySelectorAll('#comparisonTable tbody tr');
+      rows.forEach(row => {
+        const rowCat = row.getAttribute('data-cat');
+        if (category === 'all' || rowCat === category) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateRoiCalc();
+    });
+  </script>
+
+  <!-- ==========================================================================
+       SECTION 05 — SCHOOL IMAGE SHOWCASE
+       ========================================================================== -->
+  <section class="section img-showcase-section" style="padding-top: var(--space-xl); padding-bottom: var(--space-2xl);">
+    <div class="container">
+      <div class="showcase-card-frame reveal reveal-scale">
+        <img
+          src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1200&q=80"
+          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80';"
+          alt="Modern school classroom with teacher and engaged students"
+          class="showcase-img"
+        >
+        <div style="
+          position: absolute; inset: 0; z-index: 1;
+          background: linear-gradient(to bottom, rgba(15, 23, 42,0.65) 0%, transparent 35%, rgba(15, 23, 42,0.45) 65%, rgba(15, 23, 42,0.88) 100%);
+          pointer-events: none;
+        "></div>
+
+        <!-- Floating Hotspot Pins over Classroom Features -->
+        <div class="store-hotspot-pin" style="top: 24%; left: 32%;">
+          <span class="pulse-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #38BDF8;"></span>
+          <span>Attendance: 34/35 Present</span>
+        </div>
+
+        <div class="store-hotspot-pin" style="top: 38%; right: 28%;">
+          <span class="pulse-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #38BDF8;"></span>
+          <span>Teacher Roll-Call Verified</span>
+        </div>
+
+        <div class="reveal reveal-left" style="
+          position: absolute; top: 28px; left: 32px; z-index: 2;
+          background: rgba(56, 189, 248,0.18); border: 1px solid rgba(56, 189, 248,0.45); border-radius: 40px; padding: 8px 20px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; color: #38BDF8; font-family: var(--font-heading); box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        ">POWERED BY ACADEMIC INTELLIGENCE</div>
+
+        <div class="reveal reveal-scale" style="
+          position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; padding: 36px 40px 40px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;
+        ">
+          <div>
+            <h2 style="font-family: var(--font-heading); font-size: clamp(1.75rem, 3.5vw, 2.75rem); font-weight: 800; color: #FFFFFF; margin: 0 0 10px; text-shadow: 0 2px 18px rgba(0,0,0,0.7);">
+              Built for Real Classroom Success.
+            </h2>
+            <p style="color: rgba(255,255,255,0.88); font-size: 1.0625rem; max-width: 520px; margin: 0 0 20px; text-shadow: 0 2px 12px rgba(0,0,0,0.6);">
+              EduPulse handles administrative logistics so educators and school leaders can focus on delivering inspiring, impactful learning.
+            </p>
+            <a href="pricing.html" class="btn btn-primary" style="padding: 12px 24px;">Start Free Now →</a>
+          </div>
+
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+            <div class="showcase-kpi-chip" style="background: rgba(15, 23, 42, 0.72); border: 1px solid rgba(255, 255, 255, 0.25);">
+              <div style="font-size: 1.625rem; font-weight: 800; color: #38BDF8; font-family: var(--font-heading);" data-counter="1450" data-suffix="+">1,450+</div>
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.85); font-weight: 600; margin-top: 2px;">Active Schools</div>
+            </div>
+            <div class="showcase-kpi-chip" style="background: rgba(15, 23, 42, 0.72); border: 1px solid rgba(255, 255, 255, 0.25);">
+              <div style="font-size: 1.625rem; font-weight: 800; color: #38BDF8; font-family: var(--font-heading);" data-counter="99.9" data-suffix="%" data-decimals="1">99.9%</div>
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.85); font-weight: 600; margin-top: 2px;">Uptime SLA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">EDUPULSE</span>
+              <span class="brand-desc">SCHOOL MANAGEMENT OS</span>
+            </div>
+          </div>
+          <p>Practical, modern SaaS school management software designed for K-12 schools, academies, and growing colleges.</p>
+          <div class="footer-social-links">
+            <a href="#" class="footer-social-icon" aria-label="X (formerly Twitter)" title="X (Twitter)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="LinkedIn" title="LinkedIn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.74a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="Facebook" title="Facebook">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.8c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.89h-2.33v6.99C18.34 21.12 22 16.99 22 12z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="Instagram" title="Instagram">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" class="footer-social-icon" aria-label="GitHub" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">PRODUCT</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="home-2.html">Home 2</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">RESOURCES</h4>
+          <ul class="footer-links">
+            <li><a href="integrations.html">Integrations</a></li>
+            <li><a href="dashboard.html#help">Help & Support</a></li>
+            <li><a href="login.html">School Portal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">ACCOUNT</h4>
+          <ul class="footer-links">
+            <li><a href="login.html">School Login</a></li>
+            <li><a href="pricing.html">Start Free</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">NEWSLETTER</h4>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your school email" class="newsletter-input" required>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 16px;">SUBSCRIBE →</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 EduPulse. All rights reserved. School Management Software (SaaS).</div>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP BUTTON -->
+  <button class="back-to-top" id="backToTopBtn" aria-label="Back to top" title="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
